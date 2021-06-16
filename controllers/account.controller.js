@@ -3,11 +3,13 @@ const Account = require('../models/account.model.js');
 // Create and Save a new User
 exports.create = (req, res) => {
     // Validate request
+    
     if (!req.body) {
         return res.status(400).send({
             message: "Please fill all required field"
         });
     }
+    
     // Create a new User
     const account = new Account(req.body);
     // Save user in the database

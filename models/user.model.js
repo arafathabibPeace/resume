@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const UserSchema = mongoose.Schema({
 
-    username: String,
-    password: String,
+    username: { type: String, required: true },
+    password: { type: String, required: true },
     account: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',
