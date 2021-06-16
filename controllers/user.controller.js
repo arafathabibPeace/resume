@@ -1,7 +1,8 @@
 const User = require('../models/user.model');
+const Account = require('../models/account.model');
 
 // Create and Save a new User
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     if (!req.body) {
         return res.status(400).send({
@@ -12,8 +13,8 @@ exports.create = async(req, res) => {
     const user = new User({
         username: req.body.username,
         password: req.body.password,
+        account: req.body.account_id
     });
-   
     // Save user in the database
     await user.save()
         .then(data => {
@@ -23,6 +24,9 @@ exports.create = async(req, res) => {
                 message: err.message || "Something went wrong while creating new user."
             });
         });
+        const account = await Account.findById({_id:req.body.account_id});
+    account.users.push(user);
+    await account.save();
 
 };
 

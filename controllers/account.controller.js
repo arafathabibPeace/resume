@@ -23,7 +23,7 @@ exports.create = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAll = async (req, res) => {
-    await Account.find().populate('Employees')
+    await Account.find().populate('users')
         .then(account => {
             res.send(account);
         }).catch(err => {
@@ -35,7 +35,7 @@ exports.findAll = async (req, res) => {
 
 // Find a single User with a id
 exports.findOne = (req, res) => {
-    Account.findById(req.params.id).populate('Employees')
+    Account.findById(req.params.id).populate('users')
         .then(account => {
             if (!account) {
                 return res.status(404).send({

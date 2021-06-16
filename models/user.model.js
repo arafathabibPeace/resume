@@ -1,23 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// const { nanoid } = require('nanoid');
-
 const UserSchema = mongoose.Schema({
-    // _id: {
-    //     type: String,
-    //     default: () => nanoid()
-    // },
+
     username: String,
     password: String,
-    employees: [{
+    account: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',
         required: true
+    },
+    employees: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Employee',
     }]
-    // is_active: { type: Boolean, default: false },
-    // is_verified: { type: Boolean, default: false },
-    // is_deleted: { type: Boolean, default: false }
+
 }, {
     timestamps: true
 });

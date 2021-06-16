@@ -8,9 +8,9 @@ const AccountSchema = mongoose.Schema({
     //     default: () => nanoid()},
     account_name: String,
     account_description: String,
-    employees:[{
+    users:[{
         type:Schema.Types.ObjectId,
-        ref:"Employee"
+        ref:"User"
     }],
     // is_active: { type: Boolean, default: false },
     // is_verified: { type: Boolean, default: false },
