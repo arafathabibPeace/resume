@@ -1,30 +1,5 @@
 const Account = require('../models/account.model.js');
 
-// const AccountController = {
-//     create: async (req, res) => {
-//         const newAccount = new Account(req.body);
-//         const savedAccount = await newAccount.save();
-//         res.json(savedAccount);
-//     },
-//     findAll: async (req, res) => {
-//         const found = await Account.find();
-//         res.json(found);
-//     },
-//     findOne: async (req, res) => {
-//         const found = await Account.findById(req.params.id);
-//         res.json(found)
-//     },
-//     update: async (req, res) => {
-//         const updateAccount = await Account.findByIdAndUpdate(req.body.id, req.body);
-//         res.json(updateAccount);
-//     },
-//     delete: async (req, res) => {
-//         const deleteAccount = await Account.findByIdAndRemove(req.body.id);
-//         res.json(deleteAccount);
-//     }
-// }
-// module.exports = AccountController;
-
 // Create and Save a new User
 exports.create = (req, res) => {
     // Validate request
