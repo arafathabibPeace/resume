@@ -10,11 +10,7 @@ exports.create = async (req, res) => {
         });
     }
     // Create a new User
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        account: req.body.account_id
-    });
+    const user = new User(req.body);
     // Save user in the database
     await user.save()
         .then(data => {
@@ -24,7 +20,7 @@ exports.create = async (req, res) => {
                 message: err.message || "Something went wrong while creating new user."
             });
         });
-    const account = await Account.findById({ _id: req.body.account_id });
+    const account = await Account.findById({ _id: req.body.account });
     account.users.push(user);
     await account.save();
 
@@ -69,7 +65,7 @@ exports.update = (req, res) => {
     const user2 = {
         username: req.body.username,
         password: req.body.password,
-        account: req.body.account_id
+        account: req.body.account
     }
     // Validate Request
     if (!req.body) {

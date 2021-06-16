@@ -12,9 +12,9 @@ router.get('/', employeeController.findAll);
 router.get('/:id', employeeController.findOneById);
 
 // Update a user with id
-router.put('/:id', employeeController.update);
+router.put('/', employeeController.update);
 
 // Delete a user with id
-router.delete('/:id', employeeController.delete);
+router.delete('/', employeeController.delete);
 
 module.exports = router
