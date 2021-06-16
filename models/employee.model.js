@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const EmployeeSchema = mongoose.Schema({
-    first_name: String,
-    middle_name: String,
-    last_name: String,
+    first_name: { type: String, required: true },
+    middle_name: { type: String, required: true },
+    last_name: { type: String, required: true },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

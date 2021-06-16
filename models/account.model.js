@@ -6,11 +6,11 @@ const AccountSchema = mongoose.Schema({
     // _id:{
     //     type: String,
     //     default: () => nanoid()},
-    account_name: String,
+    account_name: { type: String, required: true },
     account_description: String,
-    users:[{
-        type:Schema.Types.ObjectId,
-        ref:"User"
+    users: [{
+        type: Schema.Types.ObjectId,
+        ref: "User"
     }],
     // is_active: { type: Boolean, default: false },
     // is_verified: { type: Boolean, default: false },
