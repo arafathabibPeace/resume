@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
                 message: err.message || "Something went wrong while creating new user."
             });
         });
-        const account = await Account.findById({_id:req.body.account_id});
+    const account = await Account.findById({ _id: req.body.account_id });
     account.users.push(user);
     await account.save();
 
@@ -66,6 +66,11 @@ exports.findOne = (req, res) => {
 
 // Update a User identified by the id in the request
 exports.update = (req, res) => {
+    const user2 = {
+        username: req.body.username,
+        password: req.body.password,
+        account: req.body.account_id
+    }
     // Validate Request
     if (!req.body) {
         return res.status(400).send({
@@ -74,8 +79,7 @@ exports.update = (req, res) => {
     }
     // Find user and update it with the request body
     User.findByIdAndUpdate(req.body.id, {
-        username: req.body.username,
-        password: req.body.password,
+        user2
     }, { new: true })
         .then(user => {
             if (!user) {
@@ -95,6 +99,7 @@ exports.update = (req, res) => {
             });
         });
 };
+
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
     User.findByIdAndDelete(req.body.id)
