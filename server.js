@@ -44,6 +44,10 @@ const accountRoutes = require('./routes/account.routes');
 // using as middleware
 app.use('/api/account', accountRoutes)
 
+// Require Account routes
+const employeeRoutes = require('./routes/employee.routes');
+// using as middleware
+app.use('/api/employee', employeeRoutes)
 
 // listen for requests
 app.listen(port, () => {

@@ -1,17 +1,5 @@
-const Account = require('../models/account.model.js');
-const User = require('../models/user.model.js');
+const User = require('../models/user.model');
 
-// Retrieve and return all users from the database.
-exports.findAll = (req, res) => {
-    User.find()
-        .then(users => {
-            res.send(users);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Something went wrong while getting list of users."
-            });
-        });
-};
 // Create and Save a new User
 exports.create = async(req, res) => {
     // Validate request
@@ -24,7 +12,6 @@ exports.create = async(req, res) => {
     const user = new User({
         username: req.body.username,
         password: req.body.password,
-        account: req.body.account_id
     });
    
     // Save user in the database
@@ -36,36 +23,24 @@ exports.create = async(req, res) => {
                 message: err.message || "Something went wrong while creating new user."
             });
         });
-        const account = await Account.findById({_id:req.body.account_id});
-        account.users.push(user)
-        await account.save();
 
 };
-// Find a single User with a id
-exports.findOne = (req, res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if (!user) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.id
-                });
-            }
-            res.send(user);
+
+// Retrieve and return all users from the database.
+exports.findAll = (req, res) => {
+    User.find().populate('employees')
+        .then(users => {
+            res.send(users);
         }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.id
-                });
-            }
-            return res.status(500).send({
-                message: "Error getting user with id " + req.params.id
+            res.status(500).send({
+                message: err.message || "Something went wrong while getting list of users."
             });
         });
 };
 
-// Retrieve and return all users from the database by account_id.
-exports.findByAccount = (req, res) => {
-    Account.findByAccount(req.params.id).populate('User')
+// Find a single User with a id
+exports.findOne = (req, res) => {
+    User.findById(req.params.id).populate('employees')
         .then(user => {
             if (!user) {
                 return res.status(404).send({
@@ -94,10 +69,9 @@ exports.update = (req, res) => {
         });
     }
     // Find user and update it with the request body
-    User.findByIdAndUpdate(req.params.id, {
+    User.findByIdAndUpdate(req.body.id, {
         username: req.body.username,
         password: req.body.password,
-        account: req.body.account_id
     }, { new: true })
         .then(user => {
             if (!user) {
@@ -119,7 +93,7 @@ exports.update = (req, res) => {
 };
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
-    User.findByIdAndRemove(req.params.id)
+    User.findByIdAndDelete(req.body.id)
         .then(user => {
             if (!user) {
                 return res.status(404).send({

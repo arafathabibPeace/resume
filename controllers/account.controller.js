@@ -25,17 +25,6 @@ const Account = require('../models/account.model.js');
 // }
 // module.exports = AccountController;
 
-// Retrieve and return all users from the database.
-exports.findAll = async (req, res) => {
-    await Account.find().populate('users')
-        .then(account => {
-            res.send(account);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Something went wrong while getting list of users."
-            });
-        });
-};
 // Create and Save a new User
 exports.create = (req, res) => {
     // Validate request
@@ -56,9 +45,22 @@ exports.create = (req, res) => {
             });
         });
 };
+
+// Retrieve and return all users from the database.
+exports.findAll = async (req, res) => {
+    await Account.find().populate('Employees')
+        .then(account => {
+            res.send(account);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Something went wrong while getting list of users."
+            });
+        });
+};
+
 // Find a single User with a id
 exports.findOne = (req, res) => {
-    Account.findById(req.params.id).populate('users')
+    Account.findById(req.params.id).populate('Employees')
         .then(account => {
             if (!account) {
                 return res.status(404).send({

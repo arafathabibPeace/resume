@@ -10,11 +10,11 @@ const UserSchema = mongoose.Schema({
     // },
     username: String,
     password: String,
-    account: {
+    employees: [{
         type: Schema.Types.ObjectId,
-        ref: 'Account',
+        ref: 'Employee',
         required: true
-    },
+    }]
     // is_active: { type: Boolean, default: false },
     // is_verified: { type: Boolean, default: false },
     // is_deleted: { type: Boolean, default: false }
