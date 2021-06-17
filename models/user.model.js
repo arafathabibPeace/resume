@@ -14,6 +14,7 @@ const UserSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Employee',
     }]
+    
 
 }, {
     timestamps: true

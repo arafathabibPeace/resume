@@ -10,9 +10,9 @@ exports.create = async (req, res) => {
         });
     }
     // Create a new User
-    const user = new User(req.body);
+    const newObject = new User(req.body);
     // Save user in the database
-    await user.save()
+    await newObject.save()
         .then(data => {
             res.send(data);
         }).catch(err => {
@@ -20,15 +20,26 @@ exports.create = async (req, res) => {
                 message: err.message || "Something went wrong while creating new user."
             });
         });
-    const account = await Account.findById({ _id: req.body.account });
-    account.users.push(user);
-    await account.save();
+    const parentObject = await Account.findById({ _id: req.body.account });
+    parentObject.users.push(newObject);
+    await parentObject.save();
 
 };
 
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
-    User.find().populate('employees')
+    User.find().populate({
+        path: 'employees',
+        select: '-user -__v',
+        populate: {
+            path: 'person_details contact_details employments',
+            select: '-employees -__v',
+            populate: {
+                path: 'job skills employer',
+                select: '-employment -__v'
+            }
+        }
+    })
         .then(users => {
             res.send(users);
         }).catch(err => {
