@@ -34,20 +34,57 @@ app.get('/', (req, res) => {
     res.json({ "message": "Hello World" });
 });
 
-// Require Users routes
-const userRoutes = require('./routes/user.routes');
-// using as middleware
-app.use('/api/user', userRoutes);
+
 
 // Require Account routes
 const accountRoutes = require('./routes/account.routes');
 // using as middleware
 app.use('/api/account', accountRoutes)
 
-// Require Account routes
+// Require Users routes
+const userRoutes = require('./routes/user.routes');
+// using as middleware
+app.use('/api/user', userRoutes);
+
+// Require Employee routes
 const employeeRoutes = require('./routes/employee.routes');
 // using as middleware
 app.use('/api/employee', employeeRoutes)
+
+// Require Person routes
+const personRoutes = require('./routes/person.routes');
+// using as middleware
+app.use('/api/person', personRoutes)
+
+// Require Contact routes
+const contactRoutes = require('./routes/contact.routes');
+// using as middleware
+app.use('/api/contact', contactRoutes)
+
+// Require Skill routes
+const skillRoutes = require('./routes/skill.routes');
+// using as middleware
+app.use('/api/skill', skillRoutes)
+
+// Require Job routes
+const jobRoutes = require('./routes/job.routes');
+// using as middleware
+app.use('/api/job', jobRoutes)
+
+// Require Objective routes
+const objectiveRoutes = require('./routes/objective.routes');
+// using as middleware
+app.use('/api/objective', objectiveRoutes)
+
+// Require Employment routes
+const employmentRoutes = require('./routes/employment.routes');
+// using as middleware
+app.use('/api/employment', employmentRoutes)
+
+// Require Company routes
+const companyRoutes = require('./routes/company.routes');
+// using as middleware
+app.use('/api/company', companyRoutes)
 
 // listen for requests
 app.listen(port, () => {

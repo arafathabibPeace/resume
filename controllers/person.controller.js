@@ -1,13 +1,13 @@
+const Person = require('../models/person.model')  ;
 const Employee = require('../models/employee.model');
-const User = require('../models/user.model');
 
-const employeeController = {
+const personController = {
     create: async (req, res) => {
 
         if (!req.body) {
             res.status(400).send({ message: 'Please fill all required field' })
         }
-        const newObject = new Employee(req.body);
+        const newObject = new Person(req.body);
         await newObject.save()
             .then(data => {
                 return res.send(data);
@@ -15,25 +15,13 @@ const employeeController = {
                 return res.status(500).send(err.message || 'Something went wrong');
             })
 
-        const parentObject = await User.findById({ _id: req.body.user });
-        parentObject.employees.push(newObject);
+        const parentObject = await Employee.findById({ _id: req.body.employee });
+        parentObject.person_details.push(newObject);
         await parentObject.save();
     },
 
     findAll: async (req, res) => {
-        await Employee.find()
-            .populate('objectives', '-employee -__v')
-            .populate('person_details', '-employee -__v')
-            .populate('contact_details', '-employee -__v')
-            .populate('skills', '-employee -__v')
-            .populate({
-                path: 'employments',
-                select: '-employee -__v',
-                populate: {
-                    path: 'job employer',
-                    select: '-employment -__v'
-                }
-            })
+        await Person.find()
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -41,20 +29,15 @@ const employeeController = {
             })
     },
     findById: async (req, res) => {
-        await Employee.findById(req.params.id)
-            .populate('objectives', '-employee -__v')
-            .populate('person_details', '-employee -__v')
-            .populate('contact_details', '-employee -__v')
-            .populate('skills', '-employee -__v')
-            .populate({ path: 'employments', select: '-employee -__v', populate: { path: 'job', select: '-employment -__v' } })
+        await Person.findById(req.params.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employee id does not found');
+                    return res.status(404).send('Person id does not found');
                 }
                 return res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    return res.status(404).send('Employee id does not found')
+                    return res.status(404).send('Person id does not found')
                 }
                 return res.status(500).send(err.message || 'Something went wrong');
             })
@@ -64,25 +47,25 @@ const employeeController = {
             res.status(400).send({ message: 'Please fill all required field' })
         }
 
-        await Employee.findByIdAndUpdate(req.body.id, req.body, { new: true })
+        await Person.findByIdAndUpdate(req.body.id, req.body, { new: true })
             .then(data => {
                 if (!data) {
-                    res.status(404).send('Employee id does not exist');
+                    res.status(404).send('Person id does not exist');
                 }
                 res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    res.status(404).send('Employee id does not exist')
+                    res.status(404).send('Person id does not exist')
                 }
-                res.status(500).send('Employee id does not exist')
+                res.status(500).send('Person id does not exist')
             })
 
     },
     delete: async (req, res) => {
-        await Employee.findByIdAndDelete(req.body.id)
+        await Person.findByIdAndDelete(req.body.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employee id not found')
+                    return res.status(404).send('Person id does not exist')
                 }
                 return res.send(data);
             }).catch(err => {
@@ -94,4 +77,4 @@ const employeeController = {
 
     }
 }
-module.exports = employeeController;
+module.exports = personController;
