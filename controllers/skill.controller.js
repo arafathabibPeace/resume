@@ -4,6 +4,10 @@ const Employment = require('../models/employment.model');
 const skillController = {
 
     create: async (req, res) => {
+        const parentObject = await Employment.findById({ _id: req.body.employment });
+        if (!parentObject) {
+            return res.status(404).send('Employment id is not found')
+        }
         const newObject = new Skill(req.body);
         await newObject.save()
             .then(data => {
@@ -11,7 +15,6 @@ const skillController = {
             }).catch(err => {
                 return res.status(500).send(err.message || 'Something went wrong');
             });
-        const parentObject = await Employment.findById({ _id: req.body.employment });
         parentObject.skills.push(newObject);
         await parentObject.save();
     },

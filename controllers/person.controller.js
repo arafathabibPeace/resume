@@ -1,9 +1,12 @@
-const Person = require('../models/person.model')  ;
+const Person = require('../models/person.model');
 const Employee = require('../models/employee.model');
 
 const personController = {
     create: async (req, res) => {
-
+        const parentObject = await Employee.findById({ _id: req.body.employee });
+        if (!parentObject) {
+            return res.status(400).send('Employee id is not found')
+        }
         if (!req.body) {
             res.status(400).send({ message: 'Please fill all required field' })
         }
@@ -15,7 +18,6 @@ const personController = {
                 return res.status(500).send(err.message || 'Something went wrong');
             })
 
-        const parentObject = await Employee.findById({ _id: req.body.employee });
         parentObject.person_details.push(newObject);
         await parentObject.save();
     },

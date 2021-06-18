@@ -3,11 +3,16 @@ const Account = require('../models/account.model');
 
 // Create and Save a new User
 exports.create = async (req, res) => {
+    
     // Validate request
     if (!req.body) {
         return res.status(400).send({
             message: "Please fill all required field"
         });
+    }
+    const parentObject = await Account.findById({ _id: req.body.account });
+    if(!parentObject){
+        return res.status(404).send('Account id is not found')
     }
     // Create a new User
     const newObject = new User(req.body);
@@ -20,7 +25,6 @@ exports.create = async (req, res) => {
                 message: err.message || "Something went wrong while creating new user."
             });
         });
-    const parentObject = await Account.findById({ _id: req.body.account });
     parentObject.users.push(newObject);
     await parentObject.save();
 

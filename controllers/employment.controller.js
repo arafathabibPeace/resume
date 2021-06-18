@@ -4,6 +4,10 @@ const Employee = require('../models/employee.model');
 const employmentController = {
 
     create: async (req, res) => {
+        const parentObject = await Employee.findById({ _id: req.body.employee });
+        if (!parentObject) {
+            return res.status(400).send('Employee id is not found')
+        }
         const newObject = new Employment(req.body);
         await newObject.save()
             .then(data => {
@@ -11,15 +15,12 @@ const employmentController = {
             }).catch(err => {
                 return res.status(500).send(err.message || 'Something went wrong');
             });
-        const parentObject = await Employee.findById({ _id: req.body.employee });
         parentObject.employments.push(newObject);
         await parentObject.save();
     },
     findAll: async (req, res) => {
         await Employment.find()
-            .populate('job', '-employment -__v')
-            .populate('skills', '-employment -__v')
-            .populate('employer', '-employment -__v')
+            .populate({ path: 'job skills employer contact_details', select: '-employment -__v' })
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -28,9 +29,7 @@ const employmentController = {
     },
     findById: async (req, res) => {
         await Employment.findById(req.params.id)
-        .populate('job', '-employment -__v')
-        .populate('skill', '-employment -__v')
-        .populate('employer', '-employment -__v')
+            .populate({ path: 'job skills employer contact_details', select: '-employment -__v' })
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Contact Id not found');
