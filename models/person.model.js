@@ -8,6 +8,7 @@ const PersonSchema = mongoose.Schema({
     employee: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',
+        required:true
     },
 }, {
     timestamp: true

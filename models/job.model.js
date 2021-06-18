@@ -6,7 +6,8 @@ const JobSchema = mongoose.Schema({
     job_description: String,
     employment: {
         type: Schema.Types.ObjectId,
-        ref: 'Employment'
+        ref: 'Employment',
+        required:true
     }
 }, {
     timestamp: true

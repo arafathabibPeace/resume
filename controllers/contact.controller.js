@@ -1,9 +1,17 @@
 const Contact = require('../models/contact.model');
 const Employee = require('../models/employee.model');
+const Company = require('../models/company.model');
 
 const contactController = {
 
     create: async (req, res) => {
+
+        const parentObject = req.body['company'] ? await Company.findById({ _id: req.body.company }) : await Employee.findById({ _id: req.body.employee })
+
+        if (!parentObject) {
+            return res.status(400).send('Employee id is not found')
+        }
+
         const newObject = new Contact(req.body);
         await newObject.save()
             .then(data => {
@@ -11,7 +19,6 @@ const contactController = {
             }).catch(err => {
                 return res.status(500).send(err.message || 'Something went wrong');
             });
-        const parentObject = await Employee.findById({ _id: req.body.employee });
         parentObject.contact_details.push(newObject);
         await parentObject.save();
     },

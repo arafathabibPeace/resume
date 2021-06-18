@@ -5,7 +5,8 @@ const ObjectiveSchema = mongoose.Schema({
     objective: { type: String, required: true },
     employee: {
         type: Schema.Types.ObjectId,
-        ref: 'Employee'
+        ref: 'Employee',
+        required:true
     }
 }, {
     timestamp: true

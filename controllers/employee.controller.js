@@ -7,6 +7,10 @@ const employeeController = {
         if (!req.body) {
             res.status(400).send({ message: 'Please fill all required field' })
         }
+        const parentObject = await User.findById({ _id: req.body.user });
+        if (!parentObject) {
+            return res.status(400).send('Employment id is not found')
+        }
         const newObject = new Employee(req.body);
         await newObject.save()
             .then(data => {
@@ -15,7 +19,6 @@ const employeeController = {
                 return res.status(500).send(err.message || 'Something went wrong');
             })
 
-        const parentObject = await User.findById({ _id: req.body.user });
         parentObject.employees.push(newObject);
         await parentObject.save();
     },

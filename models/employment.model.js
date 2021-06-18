@@ -18,7 +18,7 @@ const EmploymentSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Employee',
         required: true
-    }
+    },
 }, {
     timestamp: true
 })

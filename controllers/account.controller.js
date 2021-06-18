@@ -27,15 +27,22 @@ exports.create = (req, res) => {
 exports.findAll = async (req, res) => {
     await Account.find()
         .populate({
-            path: 'users', 
+            path: 'users',
             select: '-account -__v',
             populate: {
-                path: 'employees', 
+                path: 'employees',
                 select: '-user -__v',
                 populate: {
-                    path: 'person_details contact_details employments', 
+                    path: 'person_details contact_details employments',
                     select: '-employee -__v',
-                    populate: { path: 'job skills employer' }
+                    populate: {
+                        path: 'job skills employer',
+                        select: '-employment -__v',
+                        populate: {
+                            path: 'contact_details',
+                            select: '-employer -__v'
+                        }
+                    }
                 }
             }
         })

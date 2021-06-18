@@ -4,6 +4,10 @@ const Employment = require('../models/employment.model');
 const contactController = {
 
     create: async (req, res) => {
+        const parentObject = await Employment.findById({ _id: req.body.employment });
+        if(!parentObject){
+            return res.status(404).send('Employment id is not found')
+        }
         const newObject = new Company(req.body);
         await newObject.save()
             .then(data => {
@@ -11,12 +15,12 @@ const contactController = {
             }).catch(err => {
                 return res.status(500).send(err.message || 'Something went wrong');
             });
-        const parentObject = await Employment.findById({ _id: req.body.employment });
+       
         parentObject.employer.push(newObject);
         await parentObject.save();
     },
     findAll: async (req, res) => {
-        await Company.find()
+        await Company.find().populate('contact_details')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
