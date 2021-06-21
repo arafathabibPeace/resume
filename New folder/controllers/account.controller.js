@@ -1,19 +1,51 @@
 const Account = require('../models/account.model.js');
 
 // Create and Save a new User
-exports.create = async (req, res) => {
-    await Account.create(req.body)
+exports.create = (req, res) => {
+    // Validate request
+
+    if (!req.body) {
+        return res.status(400).send({
+            message: "Please fill all required field"
+        });
+    }
+
+    // Create a new User
+    const newObject = new Account(req.body);
+    // Save user in the database
+    newObject.save()
         .then(data => {
-            return res.send(data);
-        })
-        .catch(err => {
-            return res.send(err.message || 'Something went wrong.')
-        })
+            res.send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Something went wrong while creating new user."
+            });
+        });
 };
 
 // Retrieve and return all users from the database.
 exports.findAll = async (req, res) => {
     await Account.find()
+        .populate({
+            path: 'users',
+            select: '-account -__v',
+            populate: {
+                path: 'employees',
+                select: '-user -__v',
+                populate: {
+                    path: 'person_details contact_details employments',
+                    select: '-employee -__v',
+                    populate: {
+                        path: 'job skills employer',
+                        select: '-employment -__v',
+                        populate: {
+                            path: 'contact_details',
+                            select: '-employer -__v'
+                        }
+                    }
+                }
+            }
+        })
         .then(data => {
             res.send(data);
         }).catch(err => {

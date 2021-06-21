@@ -4,16 +4,15 @@ const Schema = mongoose.Schema;
 const JobSchema = mongoose.Schema({
     job_name: { type: String, required: true },
     job_description: String,    
-    on_parent: {
+    skills: [{
         type: Schema.Types.ObjectId,
-        required: true,
-        refPath: 'onModel'
+        ref: 'Skill'
+    }],
+    employment: {
+        type: Schema.Types.ObjectId,
+        ref: 'Employment',
+        required:true
     },
-    onModel: {
-        type: String,
-        required: true,
-        enum: ['Company']
-    }
 }, {
     timestamp: true
 })

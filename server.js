@@ -34,8 +34,6 @@ app.get('/', (req, res) => {
     res.json({ "message": "Hello World" });
 });
 
-
-
 // Require Account routes
 const accountRoutes = require('./routes/account.routes');
 // using as middleware
@@ -46,10 +44,10 @@ const userRoutes = require('./routes/user.routes');
 // using as middleware
 app.use('/api/user', userRoutes);
 
-// Require Employee routes
-const employeeRoutes = require('./routes/employee.routes');
+// Require Resume routes
+const resumeRoutes = require('./routes/resume.routes');
 // using as middleware
-app.use('/api/employee', employeeRoutes)
+app.use('/api/resume', resumeRoutes)
 
 // Require Person routes
 const personRoutes = require('./routes/person.routes');
@@ -71,11 +69,6 @@ const jobRoutes = require('./routes/job.routes');
 // using as middleware
 app.use('/api/job', jobRoutes)
 
-// Require Objective routes
-const objectiveRoutes = require('./routes/objective.routes');
-// using as middleware
-app.use('/api/objective', objectiveRoutes)
-
 // Require Employment routes
 const employmentRoutes = require('./routes/employment.routes');
 // using as middleware
@@ -85,6 +78,36 @@ app.use('/api/employment', employmentRoutes)
 const companyRoutes = require('./routes/company.routes');
 // using as middleware
 app.use('/api/company', companyRoutes)
+
+// Require Date routes
+const dateRoutes = require('./routes/date.routes');
+// using as middleware
+app.use('/api/date', dateRoutes);
+
+// Require Award routes
+const awardRoutes = require('./routes/award.routes');
+// using as middleware
+app.use('/api/award', awardRoutes);
+
+// Require Education routes
+const educationRoutes = require('./routes/education.routes');
+// using as middleware
+app.use('/api/education', educationRoutes);
+
+// Require Course routes
+const courseRoutes = require('./routes/course.routes');
+// using as middleware
+app.use('/api/course', courseRoutes);
+
+// Require Character Reference routes
+const characterReferenceRoutes = require('./routes/characterReference.routes');
+// using as middleware
+app.use('/api/character_reference', characterReferenceRoutes);
+
+// Require Picture Reference routes
+const pictureRoutes = require('./routes/picture.routes');
+// using as middleware
+app.use('/api/picture', pictureRoutes);
 
 // listen for requests
 app.listen(port, () => {

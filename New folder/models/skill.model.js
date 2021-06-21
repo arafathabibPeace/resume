@@ -4,16 +4,11 @@ const Schema = mongoose.Schema;
 const SkillSchema = mongoose.Schema({
     skill_name: { type: String, required: true },
     skill_rate: String,
-    on_parent: {
+    employment: {
         type: Schema.Types.ObjectId,
-        required: true,
-        refPath: 'onModel'
+        ref: 'Employment',
+        required: true
     },
-    onModel: {
-        type: String,
-        required: true,
-        enum: ['Person','Job']
-    }
 }, {
     timestamps: true
 });

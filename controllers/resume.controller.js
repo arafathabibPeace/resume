@@ -1,14 +1,17 @@
+const Resume = require('../models/resume.model');
 const Person = require('../models/person.model');
-const User = require('../models/account.model');
-const CharacterReference = require('../models/characterReference.model');
 
-const personController = {
+const employeeController = {
     create: async (req, res) => {
-        const parentObject = await User.findById({ _id: req.body.on_parent }) || await CharacterReference.findById({ _id: req.body.on_parent });
-        if (!parentObject) {
-            return res.status(404).send('Parent Object is not found')
+
+        if (!req.body) {
+            res.status(400).send({ message: 'Please fill all required field' })
         }
-        await Person.create(req.body)
+        const parentObject = await Person.findById({ _id: req.body.on_parent });
+        if (!parentObject) {
+            return res.status(400).send('Employment id is not found')
+        }
+        await Resume.create(req.body)
             .then(data => {
                 return res.send(data);
             })
@@ -16,8 +19,10 @@ const personController = {
                 return res.send(err.message || 'Something went wrong.')
             })
     },
+
     findAll: async (req, res) => {
-        await Person.find().populate('on_parent')
+        await Resume.find()
+            .populate({path:'on_parent'})
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -25,15 +30,15 @@ const personController = {
             })
     },
     findById: async (req, res) => {
-        await Person.findById(req.params.id).populate('on_parent')
+        await Resume.findById(req.params.id).populate('on_parent')
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Person id does not found');
+                    return res.status(404).send('Employee id does not found');
                 }
                 return res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    return res.status(404).send('Person id does not found')
+                    return res.status(404).send('Employee id does not found')
                 }
                 return res.status(500).send(err.message || 'Something went wrong');
             })
@@ -43,25 +48,25 @@ const personController = {
             res.status(400).send({ message: 'Please fill all required field' })
         }
 
-        await Person.findByIdAndUpdate(req.body.id, req.body, { new: true })
+        await Resume.findByIdAndUpdate(req.body.id, req.body, { new: true })
             .then(data => {
                 if (!data) {
-                    res.status(404).send('Person id does not exist');
+                    res.status(404).send('Employee id does not exist');
                 }
                 res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    res.status(404).send('Person id does not exist')
+                    res.status(404).send('Employee id does not exist')
                 }
-                res.status(500).send('Person id does not exist')
+                res.status(500).send('Employee id does not exist')
             })
 
     },
     delete: async (req, res) => {
-        await Person.findByIdAndDelete(req.body.id)
+        await Resume.findByIdAndDelete(req.body.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Person id does not exist')
+                    return res.status(404).send('Employee id not found')
                 }
                 return res.send(data);
             }).catch(err => {
@@ -73,4 +78,4 @@ const personController = {
 
     }
 }
-module.exports = personController;
+module.exports = employeeController;

@@ -3,16 +3,15 @@ const Schema = mongoose.Schema;
 
 const CompanySchema = mongoose.Schema({
     company_name: { type: String, required: true },
-    on_parent: {
+    employment: {
         type: Schema.Types.ObjectId,
-        required: true,
-        refPath: 'onModel'
+        ref: 'Employment',
+        required: true
     },
-    onModel: {
-        type: String,
-        required: true,
-        enum: ['Employment', 'Education', 'CharacterReference']
-    }
+    contact_details: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Contact'
+    }],
 }, {
     timestamp: true
 })

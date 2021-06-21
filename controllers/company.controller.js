@@ -1,26 +1,26 @@
 const Company = require('../models/company.model');
 const Employment = require('../models/employment.model');
-
+const Education = require('../models/education.model');
+const characterReference = require('../models/characterReference.model');
 const contactController = {
 
     create: async (req, res) => {
-        const parentObject = await Employment.findById({ _id: req.body.employment });
-        if(!parentObject){
-            return res.status(404).send('Employment id is not found')
+        const parentObject = await Employment.findById({ _id: req.body.on_parent })||
+        await Education.findById({ _id: req.body.on_parent })||
+        await characterReference.findById({ _id: req.body.on_parent })
+        if (!parentObject) {
+            return res.status(400).send('ParentObject id is not found')
         }
-        const newObject = new Company(req.body);
-        await newObject.save()
+        await Company.create(req.body)
             .then(data => {
                 return res.send(data);
-            }).catch(err => {
-                return res.status(500).send(err.message || 'Something went wrong');
-            });
-       
-        parentObject.employer.push(newObject);
-        await parentObject.save();
+            })
+            .catch(err => {
+                return res.send(err.message || 'Something went wrong.')
+            })
     },
     findAll: async (req, res) => {
-        await Company.find().populate('contact_details')
+        await Company.find().populate('on_parent')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -28,7 +28,7 @@ const contactController = {
             });
     },
     findById: async (req, res) => {
-        await Company.findById(req.params.id)
+        await Company.findById(req.params.id).populate('on_parent')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Job Id not found');

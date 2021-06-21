@@ -5,17 +5,11 @@ const PersonSchema = mongoose.Schema({
     first_name: { type: String, required: true },
     middle_name: { type: String, required: true },
     last_name: { type: String, required: true },
-    gender: String,
-    on_parent: {
+    employee: {
         type: Schema.Types.ObjectId,
-        required: true,
-        refPath: 'onModel'
+        ref: 'Employee',
+        required:true
     },
-    onModel: {
-        type: String,
-        required: true,
-        enum: ['User', 'CharacterReference']
-    }
 }, {
     timestamp: true
 });

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ContactSchema = mongoose.Schema({
-    contact_name: { type: String, required: true },
-    contact_value: { type: String, required: true },
+const CourseSchema = mongoose.Schema({
+    course_name: { type: String, required: true },
+    course_major: {type: String, required:true},
     on_parent: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -12,9 +12,9 @@ const ContactSchema = mongoose.Schema({
     onModel: {
         type: String,
         required: true,
-        enum: ['Person', 'Company', 'CharacterReference']
+        enum: ['Education']
     }
 }, {
     timestamp: true
 })
-module.exports = mongoose.model('Contact', ContactSchema);
+module.exports = mongoose.model('Course', CourseSchema);
