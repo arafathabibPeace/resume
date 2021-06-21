@@ -1,13 +1,15 @@
-const Employment = require('../models/employment.model');
+const Award = require('../models/award.model');
+const Education = require('../models/education.model');
 const Person = require('../models/person.model');
 
-const employmentController = {
+const awardController = {
+
     create: async (req, res) => {
-        const parentObject = await Person.findById({ _id: req.body.on_parent });
+        const parentObject = await Education.findById({ _id: req.body.on_parent })||await Person.findById({ _id: req.body.on_parent });
         if (!parentObject) {
-            return res.status(404).send('Parent object id is not found')
+            return res.status(400).send('Parent object id is not found')
         }
-        await Employment.create(req.body)
+        await Award.create(req.body)
             .then(data => {
                 return res.send(data);
             })
@@ -16,8 +18,7 @@ const employmentController = {
             })
     },
     findAll: async (req, res) => {
-        await Employment.find()
-            .populate('on_parent')
+        await Award.find().populate('on_parent')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -25,43 +26,43 @@ const employmentController = {
             });
     },
     findById: async (req, res) => {
-        await Employment.findById(req.params.id).populate('on_parent')
+        await Award.findById(req.params.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employment id not found');
+                    return res.status(404).send('Award id not found');
                 }
                 return res.send(data)
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    return res.status(404).send('Employment id not found')
+                    return res.status(404).send('Award id not found')
                 }
                 return res.status(500).send(err.message || 'Something went wrong')
             })
     },
     update: async (req, res) => {
-        await Employment.findByIdAndUpdate(req.body.id, req.body, { new: true })
+        await Award.findByIdAndUpdate(req.body.id, req.body, { new: true })
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employment ID not found');
+                    return res.status(404).send('Award id not found');
                 }
                 return res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    return res.status(404).send('Employment id not found')
+                    return res.status(404).send('Award id not found')
                 }
-                return res.status(500).send('Employment id not found')
+                return res.status(500).send('Award id not found')
             })
     },
     delete: async (req, res) => {
-        await Employment.findByIdAndDelete(req.body.id)
+        await Award.findByIdAndDelete(req.body.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employment id not found')
+                    return res.status(404).send('Award id not found')
                 }
                 return res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                    return res.status(404).send('Employment id not found');
+                    return res.status(404).send('Award id not found');
                 }
                 return res.status(500).send(err.message || 'Something went wrong');
             })
@@ -69,4 +70,4 @@ const employmentController = {
     }
 }
 
-module.exports = employmentController;
+module.exports = awardController;

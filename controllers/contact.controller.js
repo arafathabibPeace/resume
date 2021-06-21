@@ -1,29 +1,29 @@
 const Contact = require('../models/contact.model');
-const Employee = require('../models/employee.model');
+const Person = require('../models/person.model');
 const Company = require('../models/company.model');
+const characterReference = require('../models/characterReference.model');
 
 const contactController = {
 
     create: async (req, res) => {
 
-        const parentObject = req.body['company'] ? await Company.findById({ _id: req.body.company }) : await Employee.findById({ _id: req.body.employee })
-
+        const parentObject = await Company.findById({ _id: req.body.on_parent }) ||
+            await Person.findById({ _id: req.body.on_parent }) ||
+            await characterReference.findById({ _id: req.body.on_parent });
         if (!parentObject) {
-            return res.status(400).send('Employee id is not found')
+            return res.status(404).send('Parent object id is not found')
         }
-
-        const newObject = new Contact(req.body);
-        await newObject.save()
+        await Contact.create(req.body)
             .then(data => {
                 return res.send(data);
-            }).catch(err => {
-                return res.status(500).send(err.message || 'Something went wrong');
-            });
-        parentObject.contact_details.push(newObject);
-        await parentObject.save();
+            })
+            .catch(err => {
+                return res.send(err.message || 'Something went wrong.')
+            })
+
     },
     findAll: async (req, res) => {
-        await Contact.find()
+        await Contact.find().populate('on_parent')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -31,7 +31,7 @@ const contactController = {
             });
     },
     findById: async (req, res) => {
-        await Contact.findById(req.params.id)
+        await Contact.findById(req.params.id).populate('on_parent')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Contact Id not found');

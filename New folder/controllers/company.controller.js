@@ -1,23 +1,26 @@
+const Company = require('../models/company.model');
 const Employment = require('../models/employment.model');
-const Person = require('../models/person.model');
 
-const employmentController = {
+const contactController = {
+
     create: async (req, res) => {
-        const parentObject = await Person.findById({ _id: req.body.on_parent });
-        if (!parentObject) {
-            return res.status(404).send('Parent object id is not found')
+        const parentObject = await Employment.findById({ _id: req.body.employment });
+        if(!parentObject){
+            return res.status(404).send('Employment id is not found')
         }
-        await Employment.create(req.body)
+        const newObject = new Company(req.body);
+        await newObject.save()
             .then(data => {
                 return res.send(data);
-            })
-            .catch(err => {
-                return res.send(err.message || 'Something went wrong.')
-            })
+            }).catch(err => {
+                return res.status(500).send(err.message || 'Something went wrong');
+            });
+       
+        parentObject.employer.push(newObject);
+        await parentObject.save();
     },
     findAll: async (req, res) => {
-        await Employment.find()
-            .populate('on_parent')
+        await Company.find().populate('contact_details')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -25,43 +28,43 @@ const employmentController = {
             });
     },
     findById: async (req, res) => {
-        await Employment.findById(req.params.id).populate('on_parent')
+        await Company.findById(req.params.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employment id not found');
+                    return res.status(404).send('Job Id not found');
                 }
                 return res.send(data)
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    return res.status(404).send('Employment id not found')
+                    return res.status(404).send('Job Id not found')
                 }
                 return res.status(500).send(err.message || 'Something went wrong')
             })
     },
     update: async (req, res) => {
-        await Employment.findByIdAndUpdate(req.body.id, req.body, { new: true })
+        await Company.findByIdAndUpdate(req.body.id, req.body, { new: true })
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employment ID not found');
+                    return res.status(404).send('Job ID not found');
                 }
                 return res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
-                    return res.status(404).send('Employment id not found')
+                    return res.status(404).send('Job id not found')
                 }
-                return res.status(500).send('Employment id not found')
+                return res.status(500).send('Job id not found')
             })
     },
     delete: async (req, res) => {
-        await Employment.findByIdAndDelete(req.body.id)
+        await Company.findByIdAndDelete(req.body.id)
             .then(data => {
                 if (!data) {
-                    return res.status(404).send('Employment id not found')
+                    return res.status(404).send('Job id not found')
                 }
                 return res.send(data);
             }).catch(err => {
                 if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                    return res.status(404).send('Employment id not found');
+                    return res.status(404).send('Job id not found');
                 }
                 return res.status(500).send(err.message || 'Something went wrong');
             })
@@ -69,4 +72,4 @@ const employmentController = {
     }
 }
 
-module.exports = employmentController;
+module.exports = contactController;

@@ -5,17 +5,17 @@ const UserSchema = mongoose.Schema({
 
     username: { type: String, required: true },
     password: { type: String, required: true },
-    status: { type: String, required: true },
-    on_parent: {
+    account: {
         type: Schema.Types.ObjectId,
-        required: true,
-        refPath: 'onModel'
+        ref: 'Employee',
+        required: true
     },
-    onModel: {
-        type: String,
-        required: true,
-        enum: ['Account']
-    }
+    employees: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Employee',
+    }]
+    
+
 }, {
     timestamps: true
 });

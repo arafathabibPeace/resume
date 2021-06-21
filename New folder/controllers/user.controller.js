@@ -1,52 +1,77 @@
 const User = require('../models/user.model');
-const Account = require('../models/person.model');
+const Account = require('../models/account.model');
 
 // Create and Save a new User
 exports.create = async (req, res) => {
+    
+    // Validate request
     if (!req.body) {
         return res.status(400).send({
             message: "Please fill all required field"
         });
     }
-    const parentObject = await Account.findById({ _id: req.body.on_parent });
-    if (!parentObject) {
-        return res.status(404).send('Parent object is not found')
+    const parentObject = await Account.findById({ _id: req.body.account });
+    if(!parentObject){
+        return res.status(404).send('Account id is not found')
     }
-    req.body.status = 'inactive';
-    console.log(req.body)
-    await User.create(req.body)
+    // Create a new User
+    const newObject = new User(req.body);
+    // Save user in the database
+    await newObject.save()
         .then(data => {
-            return res.send(data);
-        })
-        .catch(err => {
-            return res.send(err.message || 'Something went wrong.')
-        })
+            res.send(data);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Something went wrong while creating new user."
+            });
+        });
+    parentObject.users.push(newObject);
+    await parentObject.save();
 
 };
 
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
-    User.find().populate('on_parent')
-        .then(data => {
-            res.send(data);
+    User.find().populate({
+        path: 'employees',
+        select: '-user -__v',
+        populate: {
+            path: 'person_details contact_details employments',
+            select: '-employees -__v',
+            populate: {
+                path: 'job skills employer',
+                select: '-employment -__v'
+            }
+        }
+    })
+        .then(users => {
+            res.send(users);
         }).catch(err => {
-            res.status(500).send({ message: err.message || "Something went wrong." });
+            res.status(500).send({
+                message: err.message || "Something went wrong while getting list of users."
+            });
         });
 };
 
 // Find a single User with a id
 exports.findOne = (req, res) => {
-    User.findById(req.params.id).populate('on_parent')
-        .then(data => {
-            if (!data) {
-                return res.status(404).send({ message: 'User id not found' });
+    User.findById(req.params.id).populate('employees')
+        .then(user => {
+            if (!user) {
+                return res.status(404).send({
+                    message: "User not found with id " + req.params.id
+                });
             }
             res.send(user);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: 'User id not found' });
+                return res.status(404).send({
+                    message: "User not found with id " + req.params.id
+                });
             }
-            return res.status(500).send({ message: "Something went wrong." });
+            return res.status(500).send({
+                message: "Error getting user with id " + req.params.id
+            });
         });
 };
 

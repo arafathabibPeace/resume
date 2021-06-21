@@ -1,23 +1,29 @@
 const Person = require('../models/person.model');
-const User = require('../models/account.model');
-const CharacterReference = require('../models/characterReference.model');
+const Employee = require('../models/employee.model');
 
 const personController = {
     create: async (req, res) => {
-        const parentObject = await User.findById({ _id: req.body.on_parent }) || await CharacterReference.findById({ _id: req.body.on_parent });
+        const parentObject = await Employee.findById({ _id: req.body.employee });
         if (!parentObject) {
-            return res.status(404).send('Parent Object is not found')
+            return res.status(400).send('Employee id is not found')
         }
-        await Person.create(req.body)
+        if (!req.body) {
+            res.status(400).send({ message: 'Please fill all required field' })
+        }
+        const newObject = new Person(req.body);
+        await newObject.save()
             .then(data => {
                 return res.send(data);
+            }).catch(err => { //this return error message if there is error in User.findById({ _id: req.body.user })
+                return res.status(500).send(err.message || 'Something went wrong');
             })
-            .catch(err => {
-                return res.send(err.message || 'Something went wrong.')
-            })
+
+        parentObject.person_details.push(newObject);
+        await parentObject.save();
     },
+
     findAll: async (req, res) => {
-        await Person.find().populate('on_parent')
+        await Person.find()
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -25,7 +31,7 @@ const personController = {
             })
     },
     findById: async (req, res) => {
-        await Person.findById(req.params.id).populate('on_parent')
+        await Person.findById(req.params.id)
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Person id does not found');

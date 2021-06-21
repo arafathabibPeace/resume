@@ -1,25 +1,22 @@
 const Skill = require('../models/skill.model');
-const Employment = require('../models/employment.model');
-
+const Person = require('../models/person.model');
+const Job = require('../models/job.model');
 const skillController = {
-
     create: async (req, res) => {
-        const parentObject = await Employment.findById({ _id: req.body.employment });
+        const parentObject = await Person.findById({ _id: req.body.on_parent }) || await Job.findById(req.body.on_parent);
         if (!parentObject) {
-            return res.status(404).send('Employment id is not found')
+            return res.status(400).send('ParentObject id is not found')
         }
-        const newObject = new Skill(req.body);
-        await newObject.save()
+        await Skill.create(req.body)
             .then(data => {
                 return res.send(data);
-            }).catch(err => {
-                return res.status(500).send(err.message || 'Something went wrong');
-            });
-        parentObject.skills.push(newObject);
-        await parentObject.save();
+            })
+            .catch(err => {
+                return res.send(err.message || 'Something went wrong.')
+            })
     },
     findAll: async (req, res) => {
-        await Skill.find()
+        await Skill.find().populate('on_parent')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -27,7 +24,7 @@ const skillController = {
             });
     },
     findById: async (req, res) => {
-        await Skill.findById(req.params.id)
+        await Skill.findById(req.params.id).populate('on_parent')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Skill id not found');
