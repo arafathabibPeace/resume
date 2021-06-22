@@ -1,6 +1,8 @@
 const User = require('../models/user.model');
-const Account = require('../models/person.model');
-
+const Account = require('../models/account.model');
+const config = require("../config/jwt.config");
+const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 // Create and Save a new User
 exports.create = async (req, res) => {
     if (!req.body) {
@@ -8,25 +10,141 @@ exports.create = async (req, res) => {
             message: "Please fill all required field"
         });
     }
-    const parentObject = await Account.findById({ _id: req.body.on_parent });
+    const parentObject = await Account.findById({ _id: req.body.foreign_id });
     if (!parentObject) {
         return res.status(404).send('Parent object is not found')
     }
-    req.body.status = 'inactive';
-    console.log(req.body)
-    await User.create(req.body)
+
+    //Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const newUser = new User({
+        email: req.body.email,
+        username: req.body.username,
+        password: hashPassword,
+        foreign_id: req.body.foreign_id,
+        onModel: 'Account'
+    })
+    await User.create(newUser)
         .then(data => {
-            return res.send(data);
+            //console.log(data)
+            // const payload = { id: data._id, user_type_id: data.foreign_id || 0 };
+            // const accessToken = jwt.sign(payload, config.TOKEN_SECRET);
+            //const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET);
+            //config.refresh_tokens.push(refreshToken);
+            return res.send('User Created!');
+            //return res.send(accessToken, refreshToken);
         })
         .catch(err => {
             return res.send(err.message || 'Something went wrong.')
         })
-
 };
+
+exports.login = async (req, res) => {
+
+    User.findOne({ email: req.body.email }, async (err, user) => {
+        if (err) {
+            console.log(err)
+        } else {
+            if (user) {
+                const validPass = await bcrypt.compare(req.body.password, user.password);
+                if (!validPass) return res.status(401).send("Mobile/Email or Password is wrong");
+
+                // Create and assign token
+                const payload = { id: user._id, user_type_id: user.foreign_id };
+                const accessToken = jwt.sign(payload, config.TOKEN_SECRET, { expiresIn: '1m' });
+                const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET)
+                config.REFRESH_TOKENS.push(refreshToken);
+
+                res.status(200).header("auth-token", accessToken).send({ "access token": accessToken, "refresh token": refreshToken });
+            }
+            else {
+                res.status(401).send('Invalid mobile')
+            }
+
+        }
+    })
+}
+
+exports.logout = (req, res) => {
+    console.log('Logout: ', config.REFRESH_TOKENS)
+    // const { token } = req.headers;
+    // config.refresh_tokens = config.refresh_tokens.filter(t => t !== token);
+
+    res.send("Logout successful");
+}
+
+// Access auth users only
+exports.userEvent = (req, res) => {
+    let events = [
+        {
+            "_id": "1",
+            "name": "Auto Expo",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "2",
+            "name": "Auto Expo",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "3",
+            "name": "Auto Expo",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        }
+    ]
+    res.json(events)
+};
+
+exports.adminEvent = (req, res) => {
+    let specialEvents = [
+        {
+            "_id": "1",
+            "name": "Auto Expo Special",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "2",
+            "name": "Auto Expo Special",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "3",
+            "name": "Auto Expo Special",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "4",
+            "name": "Auto Expo Special",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "5",
+            "name": "Auto Expo Special",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        },
+        {
+            "_id": "6",
+            "name": "Auto Expo Special",
+            "description": "lorem ipsum",
+            "date": "2012-04-23T18:25:43.511Z"
+        }
+    ]
+    res.json(specialEvents)
+
+}
 
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
-    User.find().populate('on_parent')
+    User.find().populate('foreign_id')
         .then(data => {
             res.send(data);
         }).catch(err => {
@@ -36,12 +154,12 @@ exports.findAll = (req, res) => {
 
 // Find a single User with a id
 exports.findOne = (req, res) => {
-    User.findById(req.params.id).populate('on_parent')
+    User.findById(req.params.id).populate('foreign_id')
         .then(data => {
             if (!data) {
                 return res.status(404).send({ message: 'User id not found' });
             }
-            res.send(user);
+            res.send(data);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({ message: 'User id not found' });

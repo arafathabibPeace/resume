@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const JobSchema = mongoose.Schema({
     job_name: { type: String, required: true },
     job_description: String,    
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

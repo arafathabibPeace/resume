@@ -5,7 +5,7 @@ const AwardSchema = mongoose.Schema({
     award_name: { type: String, required: true },
     award_description:String,
     award_code:String,
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

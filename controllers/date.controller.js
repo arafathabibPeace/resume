@@ -7,10 +7,10 @@ const awardModel = require('../models/award.model');
 const dateController = {
     create: async (req, res) => {
 
-        const parentObject = await Employment.findById({ _id: req.body.on_parent }) ||
-            await Person.findById({ _id: req.body.on_parent }) ||
-            await Education.findById({ _id: req.body.on_parent })||
-            await awardModel.findById({ _id: req.body.on_parent });
+        const parentObject = await Employment.findById({ _id: req.body.foreign_id }) ||
+            await Person.findById({ _id: req.body.foreign_id }) ||
+            await Education.findById({ _id: req.body.foreign_id })||
+            await awardModel.findById({ _id: req.body.foreign_id });
 
         if (!parentObject) {
             return res.status(400).send('ParentObject id is not found')
@@ -24,7 +24,7 @@ const dateController = {
             })
     },
     findAll: async (req, res) => {
-        await Date.find().populate('on_parent')
+        await Date.find().populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -32,7 +32,7 @@ const dateController = {
             });
     },
     findById: async (req, res) => {
-        await date.findById(req.params.id).populate('on_parent')
+        await date.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Date id not found');

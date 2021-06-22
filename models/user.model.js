@@ -5,8 +5,8 @@ const UserSchema = mongoose.Schema({
 
     username: { type: String, required: true },
     password: { type: String, required: true },
-    status: { type: String, required: true },
-    on_parent: {
+    email: { type: String, required: true },
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

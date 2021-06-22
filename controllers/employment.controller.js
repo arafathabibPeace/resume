@@ -3,7 +3,7 @@ const Person = require('../models/person.model');
 
 const employmentController = {
     create: async (req, res) => {
-        const parentObject = await Person.findById({ _id: req.body.on_parent });
+        const parentObject = await Person.findById({ _id: req.body.foreign_id });
         if (!parentObject) {
             return res.status(404).send('Parent object id is not found')
         }
@@ -17,7 +17,7 @@ const employmentController = {
     },
     findAll: async (req, res) => {
         await Employment.find()
-            .populate('on_parent')
+            .populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -25,7 +25,7 @@ const employmentController = {
             });
     },
     findById: async (req, res) => {
-        await Employment.findById(req.params.id).populate('on_parent')
+        await Employment.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Employment id not found');

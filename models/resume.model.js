@@ -5,7 +5,7 @@ const ResumeSchema = mongoose.Schema({
 
     resume_name: { type: String, required: true },
     objectives: String,
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel',

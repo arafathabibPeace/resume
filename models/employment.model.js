@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const EmploymentSchema = mongoose.Schema({
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'
