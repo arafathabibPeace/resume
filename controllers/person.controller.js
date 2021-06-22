@@ -4,7 +4,7 @@ const CharacterReference = require('../models/characterReference.model');
 
 const personController = {
     create: async (req, res) => {
-        const parentObject = await User.findById({ _id: req.body.on_parent }) || await CharacterReference.findById({ _id: req.body.on_parent });
+        const parentObject = await User.findById({ _id: req.body.foreign_id }) || await CharacterReference.findById({ _id: req.body.foreign_id });
         if (!parentObject) {
             return res.status(404).send('Parent Object is not found')
         }
@@ -17,7 +17,7 @@ const personController = {
             })
     },
     findAll: async (req, res) => {
-        await Person.find().populate('on_parent')
+        await Person.find().populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -25,7 +25,7 @@ const personController = {
             })
     },
     findById: async (req, res) => {
-        await Person.findById(req.params.id).populate('on_parent')
+        await Person.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Person id does not found');

@@ -6,7 +6,7 @@ const PersonSchema = mongoose.Schema({
     middle_name: { type: String, required: true },
     last_name: { type: String, required: true },
     gender: String,
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

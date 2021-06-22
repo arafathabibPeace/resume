@@ -4,10 +4,10 @@ const Education = require('../models/education.model');
 const courseController = {
     create: async (req, res) => {
         //this catches error if the send params name is wrong
-        // if(!req.body.course_name||!req.body.course_major||!req.body.on_parent||!req.body.onModel){
+        // if(!req.body.course_name||!req.body.course_major||!req.body.foreign_id||!req.body.onModel){
         //     return res.status(404).send('error');
         // }
-        const parentObject = await Education.findById({ _id: req.body.on_parent });
+        const parentObject = await Education.findById({ _id: req.body.foreign_id });
 
         if (!parentObject) {
             return res.status(400).send('ParentObject id is not found')
@@ -21,7 +21,7 @@ const courseController = {
             })
     },
     findAll: async (req, res) => {
-        await Course.find().populate('on_parent')
+        await Course.find().populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -29,7 +29,7 @@ const courseController = {
             });
     },
     findById: async (req, res) => {
-        await date.findById(req.params.id).populate('on_parent')
+        await date.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Course id not found');

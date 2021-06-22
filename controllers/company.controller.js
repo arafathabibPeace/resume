@@ -5,9 +5,9 @@ const characterReference = require('../models/characterReference.model');
 const contactController = {
 
     create: async (req, res) => {
-        const parentObject = await Employment.findById({ _id: req.body.on_parent })||
-        await Education.findById({ _id: req.body.on_parent })||
-        await characterReference.findById({ _id: req.body.on_parent })
+        const parentObject = await Employment.findById({ _id: req.body.foreign_id })||
+        await Education.findById({ _id: req.body.foreign_id })||
+        await characterReference.findById({ _id: req.body.foreign_id })
         if (!parentObject) {
             return res.status(400).send('ParentObject id is not found')
         }
@@ -20,7 +20,7 @@ const contactController = {
             })
     },
     findAll: async (req, res) => {
-        await Company.find().populate('on_parent')
+        await Company.find().populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -28,7 +28,7 @@ const contactController = {
             });
     },
     findById: async (req, res) => {
-        await Company.findById(req.params.id).populate('on_parent')
+        await Company.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Job Id not found');

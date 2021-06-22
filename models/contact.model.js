@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ContactSchema = mongoose.Schema({
     contact_name: { type: String, required: true },
     contact_value: { type: String, required: true },
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

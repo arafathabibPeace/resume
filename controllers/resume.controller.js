@@ -7,7 +7,7 @@ const employeeController = {
         if (!req.body) {
             res.status(400).send({ message: 'Please fill all required field' })
         }
-        const parentObject = await Person.findById({ _id: req.body.on_parent });
+        const parentObject = await Person.findById({ _id: req.body.foreign_id });
         if (!parentObject) {
             return res.status(400).send('Employment id is not found')
         }
@@ -22,7 +22,7 @@ const employeeController = {
 
     findAll: async (req, res) => {
         await Resume.find()
-            .populate({path:'on_parent'})
+            .populate({path:'foreign_id'})
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -30,7 +30,7 @@ const employeeController = {
             })
     },
     findById: async (req, res) => {
-        await Resume.findById(req.params.id).populate('on_parent')
+        await Resume.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Employee id does not found');

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const CourseSchema = mongoose.Schema({
     course_name: { type: String, required: true },
     course_major: {type: String, required:true},
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

@@ -7,9 +7,9 @@ const contactController = {
 
     create: async (req, res) => {
 
-        const parentObject = await Company.findById({ _id: req.body.on_parent }) ||
-            await Person.findById({ _id: req.body.on_parent }) ||
-            await characterReference.findById({ _id: req.body.on_parent });
+        const parentObject = await Company.findById({ _id: req.body.foreign_id }) ||
+            await Person.findById({ _id: req.body.foreign_id }) ||
+            await characterReference.findById({ _id: req.body.foreign_id });
         if (!parentObject) {
             return res.status(404).send('Parent object id is not found')
         }
@@ -23,7 +23,7 @@ const contactController = {
 
     },
     findAll: async (req, res) => {
-        await Contact.find().populate('on_parent')
+        await Contact.find().populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
@@ -31,7 +31,7 @@ const contactController = {
             });
     },
     findById: async (req, res) => {
-        await Contact.findById(req.params.id).populate('on_parent')
+        await Contact.findById(req.params.id).populate('foreign_id')
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Contact Id not found');

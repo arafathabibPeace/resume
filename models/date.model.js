@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const DateSchema = mongoose.Schema({
     date_name: { type: String, required: true },
     date: {type: String, required:true},
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

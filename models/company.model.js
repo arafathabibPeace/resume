@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const CompanySchema = mongoose.Schema({
     company_name: { type: String, required: true },
-    on_parent: {
+    foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'

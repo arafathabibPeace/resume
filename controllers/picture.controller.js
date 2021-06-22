@@ -4,13 +4,13 @@ const Skill = require('../models/skill.model');
 
 const pictureController = {
     create: async (req, res) => {
-        const parentObject = await Person.findById({ _id: req.body.on_parent })||
-        await Skill.findById({ _id: req.body.on_parent });
+        const parentObject = await Person.findById({ _id: req.body.foreign_id })||
+        await Skill.findById({ _id: req.body.foreign_id });
         if (!parentObject) {
             return res.status(400).send('Parent object id is not found')
         }
 
-        await Picture.create({ picture_name: req.body.picture_name, picture_path: req.file.path, on_parent: req.body.on_parent, onModel:req.body.onModel})
+        await Picture.create({ picture_name: req.body.picture_name, picture_path: req.file.path, foreign_id: req.body.foreign_id, onModel:req.body.onModel})
             .then(data => {
                 return res.send(data);
             })
@@ -19,7 +19,7 @@ const pictureController = {
             })
     },
     findAll: async (req, res) => {
-        await Picture.find().populate('on_parent')
+        await Picture.find().populate('foreign_id')
             .then(data => {
                 return res.send(data);
             }).catch(err => {
