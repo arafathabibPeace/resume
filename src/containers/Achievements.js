@@ -1,11 +1,60 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import EducationalAttainment from './EducationalAttainment'
 import EmploymentHistory from './EmploymentHistory'
 import LicensesOrCertificatesOrTrainings from './LicensesOrCertificatesOrTrainings'
 import CharacterReferences from './CharacterReferences'
-import Link from '@material-ui/core/Link'
-import Grid from '@material-ui/core/Grid'
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box p={3}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
+
+
+const theme = createMuiTheme({
+    tab: {
+        label: {
+            fontSize: 10
+        }
+    }
+});
+
+
+
 
 function Achievements(props) {
 
@@ -14,7 +63,7 @@ function Achievements(props) {
     const employmentHistory = achievements.employments
     const licensesOrCertificatesOrTrainings = achievements.licensesOrCertificatesOrTrainings
     const characterReferences = achievements.characterReferences
-    const [selectedIndex, setSelectedIndex] = useState(0)
+    const [value, setValue] = React.useState(0);
     const menu = ['Educational Attainment', 'Employment History', 'Trainings', 'Character Reference']
     const content = [
         <EducationalAttainment educationalAttainment={educationalAttainment} />,
@@ -23,32 +72,38 @@ function Achievements(props) {
         <CharacterReferences characterReferences={characterReferences} />
     ]
 
-    const handleChange = (event, index) => {
-        setSelectedIndex(index)
-    }
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
 
     return (
-        <div><Grid>
-            <Grid style={{ width: '900px' }}>
-                {menu.map((item, index) => {
-                    return <Link href="#" onClick={() => handleChange(item, index)} style={{ active: { color: 'blue' } }}>
-                        <div style={{ display: 'inline-block', padding: '10px 20px 10px 20px'}}>
-                            {item}
-                        </div>
-                    </Link>
-                })}
-            </Grid>
-            <Grid style={{ width: '100%' }}>
-                <div style={{ overflowY: 'auto' }}>
-                    {(selectedIndex === 0 && educationalAttainment) ? content[0] : null}
-                    {(selectedIndex === 1 && employmentHistory) ? content[1] : null}
-                    {(selectedIndex === 2 && licensesOrCertificatesOrTrainings) ? content[2] : null}
-                    {(selectedIndex === 3 && characterReferences) ? content[3] : null}
-                </div>
-            </Grid>
-        </Grid>
+        <ThemeProvider theme={theme}>
+            <AppBar position="static">
+                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" >
+                    {menu.map((label, index) => {
+                        return <Tab label={label} {...a11yProps(index)} />
+                    })}
+                </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+                {educationalAttainment ? content[0] : null}
 
-        </div>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                {employmentHistory ? content[1] : null}
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                {licensesOrCertificatesOrTrainings ? content[2] : null}
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                {characterReferences ? content[3] : null}
+            </TabPanel>
+        </ThemeProvider>
+
+
+
+
     );
 }
 Achievements.propTypes = {
