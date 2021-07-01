@@ -14,15 +14,15 @@ function PersonalDetails(props) {
     return (
         <div style={{ alignCntent: 'center' }}>
 
-            <div style={{ alignCntent: 'center' }}>
+            <div style={{ alignCntent: 'center', paddingTop:'3  0px'}}>
                 {path ? <ProfileAvatar path={path} /> : null}
             </div>
-            <div style={{padding:'10px'}}><h3>{name ? name.first_name + ' ' + name.middle_name + ' ' + name.last_name : null}</h3></div>
-            <div style={{padding:'5px'}}>
+            <div><h3>{name ? name.first_name + ' ' + name.middle_name + ' ' + name.last_name : null}</h3></div>
+            <div>
                 {contacts ? <Contact contacts={contacts} /> : null}
             </div>
             <div><h4>Total years of job experience: 7</h4></div>
-            <div style={{padding:'5px'}}><h3>Skills</h3>
+            <div ><h3>Skills</h3>
                 {skills ? <Skill skills={skills} /> : null}
             </div>
 

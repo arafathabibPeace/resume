@@ -6,22 +6,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import CharacterReference from '../components/Profile/CharacterReference';
 import PropTypes from 'prop-types'
 
-const useStyles = makeStyles({
-    table: {
-        width: '100%',
-        border:'solid'
-    },
-});
 
 function CharacterReferences(props) {
     const { characterReferences } = props
-    const classes = useStyles();
     return (
-        <TableContainer>
+        <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>

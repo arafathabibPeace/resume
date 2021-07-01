@@ -6,19 +6,18 @@ function Main() {
 
     return (
         <div>
-            <Grid container style={{ border: '1px solid' }}>
-                <Grid item xs={12} style={{ border: '1px solid green', height: '60px' }}>
-                    Header
-                    Banner
+            <Grid container style={{ border: '1px solid', minWidth: '1500px' }}>
+                <Grid item xs={12} style={{ height: '60px', backgroundColor: '#DFE3EE' }}>
+
                 </Grid>
-                <Grid item xs={12} style={{ border: '1px solid green', height: '20px' }}>
-                    Main Menu
+                <Grid item xs={12} style={{ height: '20px', backgroundColor: '#3B5998' }}>
+
                 </Grid>
-                <Grid item xs={12} style={{ border: '1px solid blue', height: '609px'}}>
+                <Grid item xs={12} style={{ height: '609px' }}>
                     <DefaultPage />
                 </Grid>
-                <Grid item xs={12} style={{ border: '1px solid blue', height:'62px' }}>
-                    Footer
+                <Grid item xs={12} style={{ height: '62px', backgroundColor: '#3B5998' }}>
+
                 </Grid>
             </Grid>
         </div>

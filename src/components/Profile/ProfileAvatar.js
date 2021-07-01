@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         width: theme.spacing(20),
         height: theme.spacing(20),
         alignContent: 'center',
-        border: 'solid',
+        border: '3px solid #3B5998',
         display: 'block',
         marginLeft: 'auto',
         marginRight: 'auto',
