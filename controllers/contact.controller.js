@@ -1,19 +1,20 @@
 const Contact = require('../models/contact.model');
 const Person = require('../models/person.model');
 const Company = require('../models/company.model');
-const characterReference = require('../models/characterReference.model');
 
 const contactController = {
 
     create: async (req, res) => {
+        let onModel = ''
+        const parentObject = await Company.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await Person.findById({ _id: req.body.foreign_id })
 
-        const parentObject = await Company.findById({ _id: req.body.foreign_id }) ||
-            await Person.findById({ _id: req.body.foreign_id }) ||
-            await characterReference.findById({ _id: req.body.foreign_id });
-        if (!parentObject) {
+        if (!parentObject && !parentObject2) {
             return res.status(404).send('Parent object id is not found')
         }
-        await Contact.create(req.body)
+        if (parentObject) onModel = 'Company'
+        if (parentObject2) onModel = 'Person'
+        await Contact.create({ ...req.body, onModel: onModel })
             .then(data => {
                 return res.send(data);
             })

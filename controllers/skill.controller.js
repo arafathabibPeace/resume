@@ -3,11 +3,16 @@ const Person = require('../models/person.model');
 const Job = require('../models/job.model');
 const skillController = {
     create: async (req, res) => {
-        const parentObject = await Person.findById({ _id: req.body.foreign_id }) || await Job.findById(req.body.foreign_id);
-        if (!parentObject) {
+        let onModel=''
+        const parentObject = await Person.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await Job.findById(req.body.foreign_id)
+        if (!parentObject&&!parentObject2) {
             return res.status(400).send('ParentObject id is not found')
         }
-        await Skill.create(req.body)
+        if(parentObject) onModel='Person'
+        if(parentObject2) onModel='Job'
+      
+        await Skill.create({...req.body,onModel:onModel})
             .then(data => {
                 return res.send(data);
             })

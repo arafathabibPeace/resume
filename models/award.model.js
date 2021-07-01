@@ -3,8 +3,9 @@ const Schema = mongoose.Schema;
 
 const AwardSchema = mongoose.Schema({
     award_name: { type: String, required: true },
-    award_description:String,
-    award_code:String,
+    award_type: { type: String, required: true },
+    award_description: String,
+    award_code: String,
     foreign_id: {
         type: Schema.Types.ObjectId,
         required: true,

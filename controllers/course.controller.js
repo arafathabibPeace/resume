@@ -12,7 +12,7 @@ const courseController = {
         if (!parentObject) {
             return res.status(400).send('ParentObject id is not found')
         }
-        await Course.create(req.body)
+        await Course.create({...req.body, onModel:'Education'})
             .then(data => {
                 return res.send(data);
             })

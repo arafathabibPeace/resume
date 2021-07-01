@@ -1,14 +1,14 @@
 const Job = require('../models/job.model');
-const Company = require('../models/company.model');
+const Person = require('../models/person.model');
 
 const contactController = {
 
     create: async (req, res) => {
-        const parentObject = await Company.findById({ _id: req.body.foreign_id })
+        const parentObject = await Person.findById({ _id: req.body.foreign_id })
         if (!parentObject) {
             return res.status(400).send('ParentObject id is not found')
         }
-        await Job.create(req.body)
+        await Job.create({...req.body, onModel:'Person'})
             .then(data => {
                 return res.send(data);
             })

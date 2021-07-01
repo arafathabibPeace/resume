@@ -12,7 +12,7 @@ const DateSchema = mongoose.Schema({
     onModel: {
         type: String,
         required: true,
-        enum: ['Person','Employment', 'Education', 'Award']
+        enum: ['Person','Job', 'Education', 'Award']
     }
 }, {
     timestamp: true

@@ -1,21 +1,27 @@
 const Date = require('../models/date.model');
 const Person = require('../models/person.model');
-const Employment = require('../models/employment.model');
+const Job = require('../models/job.model');
 const Education = require('../models/education.model');
-const awardModel = require('../models/award.model');
+const Award = require('../models/award.model');
 
 const dateController = {
     create: async (req, res) => {
+        let onModel = ''
+        const parentObject = await Job.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await Person.findById({ _id: req.body.foreign_id })
+        const parentObject3 = await Education.findById({ _id: req.body.foreign_id })
+        const parentObject4 = await Award.findById({ _id: req.body.foreign_id });
 
-        const parentObject = await Employment.findById({ _id: req.body.foreign_id }) ||
-            await Person.findById({ _id: req.body.foreign_id }) ||
-            await Education.findById({ _id: req.body.foreign_id })||
-            await awardModel.findById({ _id: req.body.foreign_id });
-
-        if (!parentObject) {
+        if (!parentObject && !parentObject2 && !parentObject3 && !parentObject4) {
             return res.status(400).send('ParentObject id is not found')
         }
-        await Date.create(req.body)
+
+        if (parentObject) onModel = 'Job'
+        if (parentObject2) onModel = 'Person'
+        if (parentObject3) onModel = 'Education'
+        if (parentObject4) onModel = 'Award'
+
+        await Date.create({ ...req.body, onModel: onModel })
             .then(data => {
                 return res.send(data);
             })
@@ -46,7 +52,7 @@ const dateController = {
             })
     },
     update: async (req, res) => {
-        await Date.findByIdAndUpdate(req.body.id ,req.body, { new: true })
+        await Date.findByIdAndUpdate(req.body.id, req.body, { new: true })
             .then(data => {
                 if (!data) {
                     return res.status(404).send('Date id not found');

@@ -11,7 +11,7 @@ const CompanySchema = mongoose.Schema({
     onModel: {
         type: String,
         required: true,
-        enum: ['Employment', 'Education', 'CharacterReference']
+        enum: ['Job', 'Education', 'CharacterReference', 'Award']
     }
 }, {
     timestamp: true

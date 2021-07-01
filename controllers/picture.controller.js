@@ -4,13 +4,16 @@ const Skill = require('../models/skill.model');
 
 const pictureController = {
     create: async (req, res) => {
-        const parentObject = await Person.findById({ _id: req.body.foreign_id })||
-        await Skill.findById({ _id: req.body.foreign_id });
+        let onModel = ''
+        const parentObject = await Person.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await Skill.findById({ _id: req.body.foreign_id })
         if (!parentObject) {
             return res.status(400).send('Parent object id is not found')
         }
 
-        await Picture.create({ picture_name: req.body.picture_name, picture_path: req.file.path, foreign_id: req.body.foreign_id, onModel:req.body.onModel})
+        if (parentObject) onModel = 'Person'
+        if (parentObject2) onModel = 'Skill'
+        await Picture.create({ picture_path: req.file.path, foreign_id: req.body.foreign_id, onModel: onModel })
             .then(data => {
                 return res.send(data);
             })

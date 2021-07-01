@@ -1,17 +1,29 @@
 const Company = require('../models/company.model');
-const Employment = require('../models/employment.model');
+const Job = require('../models/job.model');
 const Education = require('../models/education.model');
-const characterReference = require('../models/characterReference.model');
+const CharacterReference = require('../models/characterReference.model');
+const Award = require('../models/award.model');
+
 const contactController = {
 
     create: async (req, res) => {
-        const parentObject = await Employment.findById({ _id: req.body.foreign_id })||
-        await Education.findById({ _id: req.body.foreign_id })||
-        await characterReference.findById({ _id: req.body.foreign_id })
-        if (!parentObject) {
+        let onModel = ''
+        const parentObject = await Job.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await Education.findById({ _id: req.body.foreign_id })
+        const parentObject3 = await CharacterReference.findById({ _id: req.body.foreign_id })
+        const parentObject4 = await Award.findById({ _id: req.body.foreign_id })
+
+
+        if (!parentObject && !parentObject2 && !parentObject3&&!parentObject4) {
             return res.status(400).send('ParentObject id is not found')
         }
-        await Company.create(req.body)
+        if (parentObject) onModel = 'Job'
+        if (parentObject2) onModel = 'Education'
+        if (parentObject3) onModel = 'CharacterReference'
+        if (parentObject4) onModel = 'Award'
+
+
+        await Company.create({ ...req.body, onModel: onModel })
             .then(data => {
                 return res.send(data);
             })
@@ -20,7 +32,7 @@ const contactController = {
             })
     },
     findAll: async (req, res) => {
-        await Company.find().populate('foreign_id')
+        await Company.find()
             .then(data => {
                 return res.send(data);
             }).catch(err => {

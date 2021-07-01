@@ -12,7 +12,7 @@ const JobSchema = mongoose.Schema({
     onModel: {
         type: String,
         required: true,
-        enum: ['Company']
+        enum: ['Person']
     }
 }, {
     timestamp: true

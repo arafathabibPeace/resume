@@ -12,7 +12,7 @@ const ContactSchema = mongoose.Schema({
     onModel: {
         type: String,
         required: true,
-        enum: ['Person', 'Company', 'CharacterReference']
+        enum: ['Person', 'Company']
     }
 }, {
     timestamp: true

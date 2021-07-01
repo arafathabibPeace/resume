@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PictureSchema = mongoose.Schema({
-    picture_name: { type: String, required: true },
     picture_path: String,
     foreign_id: {
         type: Schema.Types.ObjectId,

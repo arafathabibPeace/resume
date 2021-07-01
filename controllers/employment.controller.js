@@ -7,7 +7,7 @@ const employmentController = {
         if (!parentObject) {
             return res.status(404).send('Parent object id is not found')
         }
-        await Employment.create(req.body)
+        await Employment.create({...req.body, onModel:'Person'})
             .then(data => {
                 return res.send(data);
             })

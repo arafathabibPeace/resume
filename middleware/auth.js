@@ -1,9 +1,38 @@
 const config = require("../config/jwt.config");
 const jwt = require('jsonwebtoken');
 const accountModel = require("../models/account.model");
+const { roles } = require("../config/roles");
 
 //Include the permission system here
+// exports.grantAccess = (action, resourse) => {
+//     return async (req, res, next) => {
+//         try {
+//             const permission = roles.can(req.user.role)[action](resource);
+//             if (!permission.granted) {
+//                 return res.status(401).json({
+//                     error: 'You dont have permission to perform this action'
+//                 });
+//             }
+//             next();
+//         } catch (error) {
+//             next(error)
+//         }
+//     }
+// }
 
+// exports.allowIfLoggedIn = async (req, res, next) => {
+//     try {
+//         const user = res.locals.loggedInUser;
+//         if (!user)
+//             return res.status(401).json({
+//                 error: "You need to be logged in to access this route"
+//             });
+//         req.user = user;
+//         next();
+//     } catch (error) {
+//         next(error);
+//     }
+// }
 
 exports.verifyUserToken = (req, res, next) => {
 
@@ -26,13 +55,11 @@ exports.verifyUserToken = (req, res, next) => {
         next();
 
     } catch (error) {
-        const verifiedUser = jwt.verify(token, config.REFRESH_TOKEN_SECRET, { expiresIn: '10m' });
 
-        console.log('verifiedUser2:', verifiedUser)
-        if (!verifiedUser) {
-            return res.status(400).send('Invalid Token')
+        if (!config.REFRESH_TOKENS.includes(token)) {
+            return res.status(400).send('Your session is expired')
         }
-        //return res.status(400).send("Invalid Token",error);
+        const verifiedUser = jwt.verify(token, config.REFRESH_TOKEN_SECRET, { expiresIn: '10m' });
         req.user = verifiedUser; // user_id & user_type_id
         next();
     }
