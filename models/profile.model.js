@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ResumeSchema = mongoose.Schema({
+const ProfileSchema = mongoose.Schema({
 
-    resume_name: { type: String, required: true },
+    profilename: { type: String, required: true },
     objectives: String,
     foreign_id: {
         type: Schema.Types.ObjectId,
@@ -19,5 +19,5 @@ const ResumeSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Resume', ResumeSchema);
+module.exports = mongoose.model('Profile', ProfileSchema);
 

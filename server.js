@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const path =require('path')
 // create express app
 const app = express();
 app.use(cors());
@@ -13,6 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
+
+
 
 // Configuring the database
 const dbConfig = require('./config/db.config.js');
@@ -28,6 +30,7 @@ mongoose.connect(dbConfig.url, {
     console.log('Could not connect to the database.', err);
     process.exit();
 });
+app.use('/images',express.static('images'))
 
 // define a root/default route
 app.get('/', (req, res) => {
@@ -45,9 +48,9 @@ const userRoutes = require('./routes/user.routes');
 app.use('/api/user', userRoutes);
 
 // Require Resume routes
-const resumeRoutes = require('./routes/resume.routes');
+const profileRoutes = require('./routes/profile.routes');
 // using as middleware
-app.use('/api/resume', resumeRoutes)
+app.use('/api/profile', profileRoutes)
 
 // Require Person routes
 const personRoutes = require('./routes/person.routes');

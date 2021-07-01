@@ -3,6 +3,7 @@ const Account = require('../models/account.model');
 const config = require("../config/jwt.config");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+
 // Create and Save a new User
 exports.create = async (req, res) => {
     if (!req.body) {
@@ -20,7 +21,6 @@ exports.create = async (req, res) => {
     const hashPassword = await bcrypt.hash(req.body.password, salt);
     const newUser = new User({
         email: req.body.email,
-        username: req.body.username,
         password: hashPassword,
         foreign_id: req.body.foreign_id,
         onModel: 'Account'
@@ -42,11 +42,13 @@ exports.create = async (req, res) => {
 
 exports.login = async (req, res) => {
 
+
     User.findOne({ email: req.body.email }, async (err, user) => {
         if (err) {
             console.log(err)
         } else {
             if (user) {
+                console.log()
                 const validPass = await bcrypt.compare(req.body.password, user.password);
                 if (!validPass) return res.status(401).send("Mobile/Email or Password is wrong");
 
@@ -55,8 +57,9 @@ exports.login = async (req, res) => {
                 const accessToken = jwt.sign(payload, config.TOKEN_SECRET, { expiresIn: '1m' });
                 const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET)
                 config.REFRESH_TOKENS.push(refreshToken);
-
-                res.status(200).header("auth-token", accessToken).send({ "access token": accessToken, "refresh token": refreshToken });
+                res.header("refresh-token", refreshToken)
+                res.header("auth-token", accessToken)
+                res.status(200).send({ "accessToken": accessToken, "refreshToken": refreshToken, "user":user._id });
             }
             else {
                 res.status(401).send('Invalid mobile')
@@ -67,9 +70,10 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
-    console.log('Logout: ', config.REFRESH_TOKENS)
-    // const { token } = req.headers;
-    // config.refresh_tokens = config.refresh_tokens.filter(t => t !== token);
+
+    const token = req.headers.authorization;
+    config.REFRESH_TOKENS.splice(token)
+    console.log(config)
 
     res.send("Logout successful");
 }

@@ -7,7 +7,7 @@ const characterReferenceController = {
         if (!parentObject) {
             return res.status(404).send('Account id is not found')
         }
-        await CharacterReference.create(req.body)
+        await CharacterReference.create({ ...req.body, onModel: 'Person' })
             .then(data => {
                 return res.send(data);
             })

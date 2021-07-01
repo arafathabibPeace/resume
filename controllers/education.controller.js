@@ -8,7 +8,7 @@ const educationController = {
         if (!parentObject) {
             return res.status(400).send('Parent object id is not found')
         }
-        await Education.create(req.body)
+        await Education.create({...req.body, onModel:'Person'})
             .then(data => {
                 return res.send(data);
             })

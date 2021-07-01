@@ -5,11 +5,16 @@ const Person = require('../models/person.model');
 const awardController = {
 
     create: async (req, res) => {
-        const parentObject = await Education.findById({ _id: req.body.foreign_id })||await Person.findById({ _id: req.body.foreign_id });
-        if (!parentObject) {
+        let onModel = ''
+        const parentObject = await Education.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await Person.findById({ _id: req.body.foreign_id });
+        if (!parentObject && !parentObject2) {
             return res.status(400).send('Parent object id is not found')
         }
-        await Award.create(req.body)
+        if (parentObject) onModel = 'Education'
+        if (parentObject2) onModel = 'Person'
+
+        await Award.create({ ...req.body, onModel: onModel })
             .then(data => {
                 return res.send(data);
             })

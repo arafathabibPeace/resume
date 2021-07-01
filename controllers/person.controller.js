@@ -4,11 +4,16 @@ const CharacterReference = require('../models/characterReference.model');
 
 const personController = {
     create: async (req, res) => {
-        const parentObject = await User.findById({ _id: req.body.foreign_id }) || await CharacterReference.findById({ _id: req.body.foreign_id });
-        if (!parentObject) {
+        let onModel =''
+        const parentObject = await User.findById({ _id: req.body.foreign_id })
+        const parentObject2 = await CharacterReference.findById({ _id: req.body.foreign_id });
+        if (!parentObject && !parentObject2) {
             return res.status(404).send('Parent Object is not found')
         }
-        await Person.create(req.body)
+        if(parentObject) onModel = 'User'
+        if(parentObject2) onModel = 'CharacterReference'
+
+        await Person.create({...req.body, onModel:onModel})
             .then(data => {
                 return res.send(data);
             })
