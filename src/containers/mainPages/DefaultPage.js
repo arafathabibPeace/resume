@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
             marginLeft: theme.spacing(0),
             flexGrow: 1,
         },
+    },
+    divStyle: {
+        height: '609px', minHeight: '609px'
     }
 }));
 
@@ -57,14 +60,14 @@ function DefaultPage() {
     //console.log(profileData)
     return (
         <div className={classes.root}>
-            <Grid container style={{ border: '1px solid', height: '609px' }}>
+            <Grid container>
                 <Grid item xs={3}>
-                    <div style={{ border: '1px solid green', height: '609px', minHeight: '609px' }}>
+                    <div className={classes.divStyle}>
                         <PersonalDetails personalDetails={personalDetails} />
                     </div>
                 </Grid>
                 <Grid item xs={9}  >
-                    <div style={{ border: '1px solid green', height: '609px', minHeight: '609px' }}>
+                    <div className={classes.divStyle}>
                         <Achievements achievements={achievements} />
                     </div>
 
