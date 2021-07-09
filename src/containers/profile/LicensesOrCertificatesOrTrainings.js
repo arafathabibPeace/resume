@@ -7,9 +7,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import License from '../components/Profile/License';
-import Date from '../components/Profile/Date';
-import Company from '../components/Profile/Company';
+import License from '../../components/profile/License';
+import Date from '../../components/profile/Date';
+import Company from '../../components/profile/Company';
+
 
 function LicensesOrCertificatesOrTrainings(props) {
     const {licensesOrCertificatesOrTrainings} = props

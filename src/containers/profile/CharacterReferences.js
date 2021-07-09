@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -6,27 +6,26 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Education from '../components/Profile/Education';
+import CharacterReference from '../../components/profile/CharacterReference';
 import PropTypes from 'prop-types'
-function EducationalAttainment(props) {
-    // console.log(props)
-    const { educationalAttainment } = props
-    console.log(props)
+
+
+function CharacterReferences(props) {
+    const { characterReferences } = props
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
                         <TableCell />
-                        <TableCell align="left">Level</TableCell>
-                        <TableCell align="left">Course</TableCell>
-                        <TableCell align="left">School</TableCell>
-                        <TableCell align="left">Date</TableCell>
+                        <TableCell align="left">Name</TableCell>
+                        <TableCell align="left">Job</TableCell>
+                        <TableCell align="left">Company</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {educationalAttainment.map((education, index) => {
-                        return <Education education={education} key={index} />
+                    {characterReferences.map((person, index) => {
+                        return <CharacterReference reference={person} key={index} />
                     })}
 
                 </TableBody>
@@ -34,8 +33,9 @@ function EducationalAttainment(props) {
         </TableContainer>
     );
 }
-EducationalAttainment.propTypes = {
-    educationalAttainment: PropTypes.array
+
+CharacterReferences.propTypes = {
+    characterReferences: PropTypes.array
 }
 
-export default EducationalAttainment;
+export default CharacterReferences;

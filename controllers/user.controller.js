@@ -1,7 +1,7 @@
 const User = require('../models/user.model');
 const Account = require('../models/account.model');
 const config = require("../config/jwt.config");
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 // Create and Save a new User
@@ -42,13 +42,11 @@ exports.create = async (req, res) => {
 
 exports.login = async (req, res) => {
 
-
     User.findOne({ email: req.body.email }, async (err, user) => {
         if (err) {
             console.log(err)
         } else {
             if (user) {
-                console.log()
                 const validPass = await bcrypt.compare(req.body.password, user.password);
                 if (!validPass) return res.status(401).send("Mobile/Email or Password is wrong");
 
@@ -57,6 +55,7 @@ exports.login = async (req, res) => {
                 const accessToken = jwt.sign(payload, config.TOKEN_SECRET, { expiresIn: '1m' });
                 const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET)
                 config.REFRESH_TOKENS.push(refreshToken);
+                
                 res.header("refresh-token", refreshToken)
                 res.header("auth-token", accessToken)
                 res.status(200).send({ "accessToken": accessToken, "refreshToken": refreshToken, "user":user._id });

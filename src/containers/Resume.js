@@ -1,11 +1,11 @@
 import React from 'react';
 
-function AuthPage(props) {
+function Resume(props) {
     return (
         <div>
-            hi
+            resume
         </div>
     );
 }
 
-export default AuthPage;
+export default Resume;
