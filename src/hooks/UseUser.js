@@ -1,13 +1,11 @@
 import { useEffect, useReducer } from 'react'
 import UserService from '../services/UserService'
 
+
 const initialState = {
     loading: true,
     loginError: true,
     users: [],
-    userId: '',
-    accessToken: '',
-    refreshToken: ''
 }
 
 const reducer = (state, action) => {
@@ -23,19 +21,6 @@ const reducer = (state, action) => {
                 ...state,
                 loading: true
             }
-        case 'SET_TOKENS':
-            return {
-                ...state,
-                userId: action.payload._id,
-                accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken,
-                loginError: false
-            }
-        case 'LOGIN_ERROR':
-            return {
-                ...state,
-                loginError: true
-            }
         default:
             return state
 
@@ -44,6 +29,7 @@ const reducer = (state, action) => {
 
 const UseUser = (props) => {
     const [state, dispatch] = useReducer(reducer, initialState)
+    
 
     useEffect(() => {
         let users = ''
@@ -59,35 +45,8 @@ const UseUser = (props) => {
         return () => { users = '' }
     }, [])
 
-    const register = (payload) => {
-        UserService.create(payload)
-            .then(res => {
-                console.log(res.data)
-            })
-    }
-
-    const login = (payload) => {
-        UserService.login(payload)
-            .then(res => {
-                sessionStorage.setItem('isAuth', true);
-                dispatch({ type: 'SET_TOKENS', payload: res.data })
-                window.location.reload(true);
-                window.location.href = "http://localhost:3000/";
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
 
 
-    const logout = async () => {
-        await UserService.logout()
-            .then(() => {
-                sessionStorage.removeItem('isAuth')
-            })
-    }
-
-
-    return [state.users, login, register, logout, state.userId]
+    return [state.users]
 }
 export default UseUser

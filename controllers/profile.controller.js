@@ -73,10 +73,10 @@ const employeeController = {
                     const education = await Education.find({ foreign_id: i.foreign_id }).select('-onModel -__v -createdAt -updatedAt')
                     const characterReference = await CharacterReference.find({ foreign_id: i.foreign_id }).select('-onModel -__v -createdAt -updatedAt')
 
-                    let picturePath = ''
+                    let pictureDetails = {}
                     if (picture) {
                         picture.map((item) => {
-                            return picturePath = item.picture_path
+                            return pictureDetails = item
                         })
                     }
                     let licenseCertificateTraningList = []
@@ -195,7 +195,7 @@ const employeeController = {
                     return res.send({
                         profile: data,
                         person: personDetails,
-                        picture: picturePath,
+                        picture: pictureDetails,
                         contacts: contacts,
                         skills: skills,
                         licensesOrCertificatesOrTrainings: licenseCertificateTraningList,

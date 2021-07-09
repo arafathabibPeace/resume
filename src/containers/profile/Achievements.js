@@ -1,16 +1,15 @@
 import React from 'react'
-import EducationalAttainment from './EducationalAttainment'
-import EmploymentHistory from './EmploymentHistory'
-import LicensesOrCertificatesOrTrainings from './LicensesOrCertificatesOrTrainings'
-import CharacterReferences from './CharacterReferences'
+import EducationalAttainment from '../profile/EducationalAttainment'
+import EmploymentHistory from '../profile/EmploymentHistory'
+import LicensesOrCertificatesOrTrainings from '../profile/LicensesOrCertificatesOrTrainings'
+import CharacterReferences from '../profile/CharacterReferences'
 import PropTypes from 'prop-types';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider as div } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,34 +44,6 @@ function a11yProps(index) {
     };
 }
 
-
-const theme = createMuiTheme({
-    overrides: {
-      // Style sheet name ⚛️
-      MuiButton: {
-        // Name of the rule
-        text: {
-          // Some CSS
-          background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-          borderRadius: 3,
-          border: 0,
-          color: 'white',
-          height: 48,
-          padding: '0 30px',
-          boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-        },
-      },
-    MuiTabs:{
-        text:{
-            color:'blue'
-        }
-    }
-    },
-  });
-
-
-
-
 function Achievements(props) {
 
     const { achievements } = props
@@ -81,7 +52,7 @@ function Achievements(props) {
     const licensesOrCertificatesOrTrainings = achievements.licensesOrCertificatesOrTrainings
     const characterReferences = achievements.characterReferences
     const [value, setValue] = React.useState(0);
-    const menu = ['Educational Attainment', 'Employment History', 'Trainings', 'Character Reference']
+    const menu = ['Educational Attainment', 'Employment History', 'Trainings', 'Character Reference', 'Certificates', 'Projects']
     const content = [
         <EducationalAttainment educationalAttainment={educationalAttainment} />,
         <EmploymentHistory employments={employmentHistory} />,
@@ -95,11 +66,11 @@ function Achievements(props) {
 
 
     return (
-        <ThemeProvider theme={theme}>
+        <div>
             <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" theme={theme}>
+                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" style={{ backgroundColor: '#DFE3EE'}}>
                     {menu.map((label, index) => {
-                        return <Tab label={label} {...a11yProps(index)} />
+                        return <Tab key={index} label={label} {...a11yProps(index)} style={{ backgroundColor: '#3B5998' }} />//#3B5998
                     })}
                 </Tabs>
             </AppBar>
@@ -116,7 +87,13 @@ function Achievements(props) {
             <TabPanel value={value} index={3}>
                 {characterReferences ? content[3] : null}
             </TabPanel>
-        </ThemeProvider>
+            <TabPanel value={value} index={4}>
+                soon...
+            </TabPanel>
+            <TabPanel value={value} index={5}>
+                soon...
+            </TabPanel>
+        </div>
 
 
 

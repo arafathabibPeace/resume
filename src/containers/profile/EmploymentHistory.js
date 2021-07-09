@@ -6,36 +6,29 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import CharacterReference from '../components/Profile/CharacterReference';
-import PropTypes from 'prop-types'
+import Employment from '../../components/profile/Employment';
 
-
-function CharacterReferences(props) {
-    const { characterReferences } = props
+function EmploymentHistory(props) {
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
                         <TableCell />
-                        <TableCell align="left">Name</TableCell>
-                        <TableCell align="left">Job</TableCell>
+                        <TableCell align="left">Position</TableCell>
                         <TableCell align="left">Company</TableCell>
+                        <TableCell align="left">Dates</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {characterReferences.map((person, index) => {
-                        return <CharacterReference reference={person} key={index} />
+                    {props.employments.map((job, index) => {
+                        return <Employment job={job} key={index} />
                     })}
 
                 </TableBody>
             </Table>
         </TableContainer>
-    );
+    )
 }
 
-CharacterReferences.propTypes = {
-    characterReferences: PropTypes.array
-}
-
-export default CharacterReferences;
+export default EmploymentHistory;

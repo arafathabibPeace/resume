@@ -15,7 +15,12 @@ const PersonService = {
         return await axios.get('http://localhost:4000/api/profile/' + payload)
     },
     fetchById: async (payload) => {
-        return await axios.get(BASE_URL + '/' + payload)
+        
+        return await axios.get(BASE_URL + '/user/' + payload)
+    },
+    fetchByUserId: async (payload) => {
+        console.log(payload)
+        return await axios.get(BASE_URL + '/user/' + payload)
     },
 
 }

@@ -4,16 +4,16 @@ const CharacterReference = require('../models/characterReference.model');
 
 const personController = {
     create: async (req, res) => {
-        let onModel =''
+        let onModel = ''
         const parentObject = await User.findById({ _id: req.body.foreign_id })
         const parentObject2 = await CharacterReference.findById({ _id: req.body.foreign_id });
         if (!parentObject && !parentObject2) {
             return res.status(404).send('Parent Object is not found')
         }
-        if(parentObject) onModel = 'User'
-        if(parentObject2) onModel = 'CharacterReference'
+        if (parentObject) onModel = 'User'
+        if (parentObject2) onModel = 'CharacterReference'
 
-        await Person.create({...req.body, onModel:onModel})
+        await Person.create({ ...req.body, onModel: onModel })
             .then(data => {
                 return res.send(data);
             })
@@ -41,6 +41,20 @@ const personController = {
                     return res.status(404).send('Person id does not found')
                 }
                 return res.status(500).send(err.message || 'Something went wrong');
+            })
+    },
+    findByUserId: async (req, res) => {
+        await Person.findOne({ foreign_id: req.params.user })
+            .then(data => {
+                console.log('Data: ', data)
+                if (!data) {
+                    return res.status(404).send('Person user id not found')
+                }
+                return res.send(data)
+            })
+            .catch((err) => {
+                console.log(err)
+                return res.status(500).send(err.message || 'Something went wrong')
             })
     },
     update: async (req, res) => {

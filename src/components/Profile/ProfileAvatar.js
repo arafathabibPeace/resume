@@ -5,26 +5,30 @@ import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
+        display: 'inline',
         '& > *': {
             margin: theme.spacing(1),
         },
-        
+
     },
     large: {
         width: theme.spacing(20),
         height: theme.spacing(20),
         alignContent: 'center',
-        border: '3px solid #3B5998',
+        border: '3px solid white',
         display: 'block',
         marginLeft: 'auto',
         marginRight: 'auto',
     },
+    typography: {
+        fontSize: '.7rem',
+    }
 }));
 
 function ProfileAvatar(props) {
     const classes = useStyles();
-    const { path } = props
+
+    const { picture } = props
 
     const setPath = (path) => {
 
@@ -35,11 +39,12 @@ function ProfileAvatar(props) {
     }
     return (
         <div className={classes.root}>
-            <Avatar alt="Remy Sharp" src={setPath(path)} className={classes.large} />
+            <Avatar alt="Remy Sharp" src={setPath(picture.picture_path)} className={classes.large} />
         </div>
+
     );
 }
 ProfileAvatar.propType = {
-    path: PropTypes.string
+    picture: PropTypes.object
 }
 export default ProfileAvatar;

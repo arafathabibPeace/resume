@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid';
-import Achievements from '../Achievements'
-import PersonalDetails from '../PersonalDetails'
+import Achievements from '../profile/Achievements'
+import ProfessionalSummary from '../profile/ProfessionalSummary'
 import useProfile from '../../hooks/UseProfile';
 
 export const PersonContext = React.createContext()
@@ -21,49 +21,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function DefaultPage() {
+function DefaultPage(props) {
     const classes = useStyles();
     const [profileData, setProfileName] = useProfile()
-    const [personalDetails, setPersonalDetails] = useState({})
+    const [summary, setSummary] = useState({})
     const [achievements, setAchievements] = useState({})
-
-
-    const [path, setPath] = useState('')
-
+    const path = props.location.pathname
 
     useEffect(() => {
-        if (!path) {
-            setPath(window.location.pathname)
+        if (profileData.picture !== undefined) {
+            setSummary({ person: profileData.person, picture: profileData.picture, contacts: profileData.contacts, skills: profileData.skills })
+            setAchievements({ educationalAttainment: profileData.educations, employments: profileData.employments, licensesOrCertificatesOrTrainings: profileData.licensesOrCertificatesOrTrainings, characterReferences: profileData.characterReferences })
         }
-    }, [path])
-
+    }, [profileData, setSummary, setAchievements])
+    
     useEffect(() => {
-        let pathname = path.split('/')
-        if (pathname[1] === 'profile') {
+        if (Object.entries(profileData).length === 0) {
+            const pathname = path.split('/')
             if (pathname[2]) {
+
                 setProfileName(pathname[2])
             }
         }
-    }, [path, profileData, setProfileName])
 
-    useEffect(() => {
-        if (profileData.person && profileData.picture && profileData.contacts && profileData.skills) {
-            setPersonalDetails({ name: profileData.person, path: profileData.picture, contacts: profileData.contacts, skills: profileData.skills })
-        }
-        if (profileData.educations && profileData.employments && profileData.licensesOrCertificatesOrTrainings && profileData.characterReferences) {
-            setAchievements({ educationalAttainment: profileData.educations, employments: profileData.employments, licensesOrCertificatesOrTrainings: profileData.licensesOrCertificatesOrTrainings, characterReferences: profileData.characterReferences })
-        }
-    }, [profileData])
+    }, [setProfileName, path, profileData])
 
-
-
-    //console.log(profileData)
     return (
         <div className={classes.root}>
             <Grid container>
-                <Grid item xs={3}>
+                <Grid item xs={3} style={{ backgroundColor: '#DFE3EE' }}>
                     <div className={classes.divStyle}>
-                        <PersonalDetails personalDetails={personalDetails} />
+                        <ProfessionalSummary data={summary} />
+
                     </div>
                 </Grid>
                 <Grid item xs={9}  >

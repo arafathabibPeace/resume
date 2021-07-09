@@ -1,38 +1,6 @@
 const config = require("../config/jwt.config");
 const jwt = require('jsonwebtoken');
 const accountModel = require("../models/account.model");
-const { roles } = require("../config/roles");
-
-//Include the permission system here
-// exports.grantAccess = (action, resourse) => {
-//     return async (req, res, next) => {
-//         try {
-//             const permission = roles.can(req.user.role)[action](resource);
-//             if (!permission.granted) {
-//                 return res.status(401).json({
-//                     error: 'You dont have permission to perform this action'
-//                 });
-//             }
-//             next();
-//         } catch (error) {
-//             next(error)
-//         }
-//     }
-// }
-
-// exports.allowIfLoggedIn = async (req, res, next) => {
-//     try {
-//         const user = res.locals.loggedInUser;
-//         if (!user)
-//             return res.status(401).json({
-//                 error: "You need to be logged in to access this route"
-//             });
-//         req.user = user;
-//         next();
-//     } catch (error) {
-//         next(error);
-//     }
-// }
 
 exports.verifyUserToken = (req, res, next) => {
 

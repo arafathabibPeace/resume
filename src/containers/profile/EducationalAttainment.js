@@ -6,29 +6,35 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Employment from '../components/Profile/Employment';
+import Education from '../../components/profile/Education';
+import PropTypes from 'prop-types'
 
-function EmploymentHistory(props) {
+function EducationalAttainment(props) {
+    const { educationalAttainment } = props
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
                         <TableCell />
-                        <TableCell align="left">Position</TableCell>
-                        <TableCell align="left">Company</TableCell>
-                        <TableCell align="left">Dates</TableCell>
+                        <TableCell align="left">Level</TableCell>
+                        <TableCell align="left">Course</TableCell>
+                        <TableCell align="left">School</TableCell>
+                        <TableCell align="left">Date</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.employments.map((job, index) => {
-                        return <Employment job={job} key={index} />
+                    {educationalAttainment.map((education, index) => {
+                        return <Education education={education} key={index} />
                     })}
 
                 </TableBody>
             </Table>
         </TableContainer>
-    )
+    );
+}
+EducationalAttainment.propTypes = {
+    educationalAttainment: PropTypes.array
 }
 
-export default EmploymentHistory;
+export default EducationalAttainment;
